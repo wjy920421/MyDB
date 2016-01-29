@@ -22,7 +22,9 @@ private:
 
     int pageSize;
 
+    bool isPinned;
 
+    static int referenceCounter = 0;
 };
 
 #endif

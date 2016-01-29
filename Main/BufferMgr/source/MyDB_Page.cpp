@@ -12,18 +12,22 @@ MyDB_Page::MyDB_Page(void * address, int size)
 {
     this->pageAddress = address;
     this->pageSize = size;
+    this->isPinned = false;
 }
 
 
 void * getBytes()
 {
-    return nullptr;
+    return this->pageAddress;
 }
     
 
 void wroteBytes()
 {
+    if (! isPinned)
+    {
 
+    }
 }
 
 
