@@ -1,4 +1,4 @@
-./Build/bin/
-./Build/bin/*
-./Build/.sconsign.dblite
+Build/bin/
+Build/bin/*
+Build/.sconsign.dblite
 *.o
