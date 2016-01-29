@@ -7,6 +7,18 @@
 
 using namespace std;
 
+
+MyDB_BufferManager::MyDB_BufferManager (size_t pageSize, size_t numPages, string tempFile)
+{
+
+}
+
+MyDB_BufferManager::~MyDB_BufferManager ()
+{
+
+}
+
+
 MyDB_PageHandle MyDB_BufferManager :: getPage (MyDB_TablePtr, long) {
 	return nullptr;		
 }
@@ -24,12 +36,6 @@ MyDB_PageHandle MyDB_BufferManager :: getPinnedPage () {
 }
 
 void MyDB_BufferManager :: unpin (MyDB_PageHandle unpinMe) {
-}
-
-MyDB_BufferManager :: MyDB_BufferManager (size_t, size_t, string) {
-}
-
-MyDB_BufferManager :: ~MyDB_BufferManager () {
 }
 	
 #endif
