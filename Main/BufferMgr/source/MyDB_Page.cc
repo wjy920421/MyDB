@@ -14,6 +14,8 @@ using namespace std;
 
 MyDB_Page::MyDB_Page(void * address, int size, MyDB_TablePtr table, int index, bool pinned)
 {
+    referenceCounter = 0;
+
     this->pageAddress = address;
     this->pageSize = size;
     this->isPinned = pinned;

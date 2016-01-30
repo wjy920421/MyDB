@@ -19,6 +19,10 @@ public:
 
     void loadBytes();
 
+    void retain() { this->referenceCounter ++; }
+
+    void release() { this->referenceCounter --; }
+
 private:
 
     void * pageAddress;

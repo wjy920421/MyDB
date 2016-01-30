@@ -32,15 +32,14 @@ public:
 	// to the particular page that it references.  If the number of 
 	// references to a pinned page goes down to zero, then the page should
 	// become unpinned.  
-	~MyDB_PageHandleBase ();
+	~MyDB_PageHandleBase () { this->page->release(); }
 
-	// FEEL FREE TO ADD ADDITIONAL PUBLIC METHODS
-
-	MyDB_PageHandleBase(MyDB_Page * pPage);
+	MyDB_PageHandleBase(MyDB_Page * page) { this->page = page; this->page->retain(); }
 
 private:
 
-	// YOUR CODE HERE
+	MyDB_Page * page;
+
 };
 
 #endif

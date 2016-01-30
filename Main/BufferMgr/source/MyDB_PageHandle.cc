@@ -5,15 +5,30 @@
 #include <memory>
 #include "MyDB_PageHandle.h"
 
-void *MyDB_PageHandleBase :: getBytes () {
-	return nullptr;
+/*
+void MyDB_PageHandleBase::MyDB_PageHandleBase(MyDB_Page * page)
+{
+    this->page = page;
 }
 
-void MyDB_PageHandleBase :: wroteBytes () {
+
+MyDB_PageHandleBase :: ~MyDB_PageHandleBase ()
+{
+
+}
+*/
+
+void *MyDB_PageHandleBase :: getBytes ()
+{
+	
+    return nullptr;
 }
 
-MyDB_PageHandleBase :: ~MyDB_PageHandleBase () {
+void MyDB_PageHandleBase :: wroteBytes ()
+{
+
 }
+
 
 #endif
 
