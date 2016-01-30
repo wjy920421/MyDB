@@ -1,10 +1,9 @@
 
-#ifndef PAGE_H
-#define PAGE_H
+#ifndef ANONYMOUS_PAGE_H
+#define ANONYMOUS_PAGE_H
 
-#include <memory>
 #include <string>
-#include "MyDB_Table.h"
+#include "MyDB_Page.h"
 
 using namespace std;
 
@@ -12,7 +11,11 @@ class MyDB_AnonymousPage : public MyDB_Page
 {
 public:
 
-    MyDB_AnonymousPage(int pageID, void * address, int size, string tempFile, bool pinned = false);
+    MyDB_AnonymousPage(void * address, int size, string tempFile, bool pinned = false);
+
+    void wroteBytes();
+
+    void loadBytes();
 
 private:
 

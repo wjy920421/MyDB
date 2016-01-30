@@ -11,34 +11,28 @@
 
 using namespace std;
 
+int MyDB_Page::pageIDCounter = 0;
 
-MyDB_Page::MyDB_Page(int pageID, void * address, int size, bool pinned)
+MyDB_Page::MyDB_Page(void * address, int size, bool pinned)
 {
     referenceCounter = 0;
-    this->pageID = pageID;
+    this->pageID = MyDB_Page::pageIDCounter++;
     this->pageAddress = address;
     this->pageSize = size;
-    this->isPinned = pinned;
+    this->pinned = pinned;
 }
 
 
 void * MyDB_Page::getBytes()
 {
-    
+    return this->pageAddress;
 }
 
 
-void MyDB_Page::wroteBytes()
+int MyDB_Page::getPageID()
 {
-
+    return this->pageID;
 }
-
-
-void MyDB_Page::loadBytes()
-{
-
-}
-
 
 #endif
 

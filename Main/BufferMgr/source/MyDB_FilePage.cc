@@ -1,6 +1,6 @@
 
-#ifndef PAGE_C
-#define PAGE_C
+#ifndef FILE_PAGE_C
+#define FILE_PAGE_C
 
 #include <memory>
 #include <stdio.h>
@@ -12,7 +12,7 @@
 using namespace std;
 
 
-MyDB_FilePage::MyDB_FilePage(int pageID, void * address, int size, MyDB_TablePtr table, int index, bool pinned): MyDB_Page(pageID, address, size, pinned)
+MyDB_FilePage::MyDB_FilePage(void * address, int size, MyDB_TablePtr table, int index, bool pinned): MyDB_Page(address, size, pinned)
 {
     this->table = table;
     this->tableIndex = index;
@@ -21,15 +21,9 @@ MyDB_FilePage::MyDB_FilePage(int pageID, void * address, int size, MyDB_TablePtr
 }
 
 
-void * MyDB_FilePage::getBytes()
-{
-    return this->pageAddress;
-}
-
-
 void MyDB_FilePage::wroteBytes()
 {
-    if (! isPinned)
+    if (! this->isPinned())
     {
         int fd = open(this->table->getStorageLoc().c_str(), O_CREAT | O_WRONLY | O_FSYNC);
         if( fd == -1 || lseek(fd, this->tableIndex * this->pageSize, SEEK_SET) == -1 || write(fd, this->pageAddress, this->pageSize) == -1 )

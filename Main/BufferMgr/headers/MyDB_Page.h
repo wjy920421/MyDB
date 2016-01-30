@@ -11,7 +11,7 @@ class MyDB_Page
 {
 public:
 
-    MyDB_Page(int pageID, void * address, int size, MyDB_TablePtr table, int index, bool pinned = false);
+    MyDB_Page(void * address, int size, bool pinned = false);
 
     void * getBytes();
     
@@ -23,15 +23,23 @@ public:
 
     void release() { this->referenceCounter --; }
 
-private:
+    bool isPinned() { return this->pinned; }
+
+    int getPageID();
+
+protected:
 
     void * pageAddress;
 
     int pageSize;
 
-    bool isPinned;
+    bool pinned;
 
     int referenceCounter;
+
+    int pageID;
+
+    static int pageIDCounter;
 };
 
 #endif

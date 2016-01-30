@@ -1,6 +1,6 @@
 
-#ifndef PAGE_C
-#define PAGE_C
+#ifndef ANONYMOUS_PAGE_C
+#define ANONYMOUS_PAGE_C
 
 #include <memory>
 #include <stdio.h>
@@ -12,7 +12,7 @@
 using namespace std;
 
 
-MyDB_AnonymousPage::MyDB_AnonymousPage(int pageID, void * address, int size, string tempFile, bool pinned) : MyDB_Page(pageID, address, size, pinned)
+MyDB_AnonymousPage::MyDB_AnonymousPage(void * address, int size, string tempFile, bool pinned) : MyDB_Page(address, size, pinned)
 {
 
     this->tempFile = tempFile;
@@ -21,14 +21,8 @@ MyDB_AnonymousPage::MyDB_AnonymousPage(int pageID, void * address, int size, str
 }
 
 
-void * MyDB_AnonymousPage::getBytes()
-{
-    return this->pageAddress;
-}
-
-
 void MyDB_AnonymousPage::wroteBytes()
-{
+{/*
     if (! isPinned)
     {
         int fd = open(this->table->getStorageLoc().c_str(), O_CREAT | O_WRONLY | O_FSYNC);
@@ -41,12 +35,12 @@ void MyDB_AnonymousPage::wroteBytes()
         {
             perror("Failed to close file");
         }
-    }
+    }*/
 }
 
 
 void MyDB_AnonymousPage::loadBytes()
-{
+{/*
     int fd = open(this->table->getStorageLoc().c_str(), O_RDONLY | O_FSYNC);
     if( fd == -1 || lseek(fd, this->tableIndex * this->pageSize, SEEK_SET) == -1 || read(fd, this->pageAddress, pageSize) == -1 )
     {
@@ -54,7 +48,7 @@ void MyDB_AnonymousPage::loadBytes()
         exit(-1);
     }
     
-    close(fd);
+    close(fd);*/
 }
 
 
