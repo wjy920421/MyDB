@@ -17,10 +17,10 @@ public:
     MyDB_LRUCacheNode(T_KEY const& rKey, T_OBJECT const& rObject) : pKey(&rKey), pObject(&rObject)
     {
         this->pMoreRecentNode = this->pLessRecentNode = nullptr;
-        cout << "LRUCacheNode created" << endl;
+        //cout << "LRUCacheNode created" << endl;
     }
     
-    ~MyDB_LRUCacheNode() { cout << "LRUCacheNode deleted" << endl; }
+    ~MyDB_LRUCacheNode() { /*cout << "LRUCacheNode deleted" << endl;*/ }
     
     const T_KEY * pKey;
     
@@ -65,7 +65,7 @@ private:
     
     void internalRemove(T_KEY const& key, bool keepNode = false);
     
-    void printNodes();
+    //void printNodes();
     
 };
 
@@ -75,15 +75,15 @@ MyDB_LRUCache<T_KEY, T_OBJECT>::~MyDB_LRUCache()
 {
     MyDB_LRUCacheNode<T_KEY, T_OBJECT> * pNode = pLeastRecentNode;
     MyDB_LRUCacheNode<T_KEY, T_OBJECT> * pNext;
-    cout << "size of map: " << map.size() << endl;
+    //cout << "size of map: " << map.size() << endl;
     while(pNode != nullptr)
     {
         pNext = pNode->pMoreRecentNode;
         this->remove(*(pNode->pKey));
         pNode = pNext;
-        cout << "size of map: " << map.size() << endl;
+        //cout << "size of map: " << map.size() << endl;
     }
-    cout << "size of map: " << map.size() << endl;
+    //cout << "size of map: " << map.size() << endl;
 }
 
 
@@ -93,7 +93,6 @@ T_OBJECT * MyDB_LRUCache<T_KEY, T_OBJECT>::get(T_KEY const& key)
     if(this->map.count(key) == 0) return nullptr;
     
     MyDB_LRUCacheNode<T_KEY, T_OBJECT> * pNode = this->map[key];
-    
     
     this->internalRemove(key, true);
     this->internalSet(key, *(this->map[key]->pObject), false);
@@ -159,7 +158,7 @@ void MyDB_LRUCache<T_KEY, T_OBJECT>::internalSet(T_KEY const& key, T_OBJECT cons
         this->remove(*(this->pLeastRecentNode->pKey));
     }
     
-    this->printNodes();
+    //this->printNodes();
 }
 
 template <class T_KEY, class T_OBJECT>
@@ -187,7 +186,7 @@ void MyDB_LRUCache<T_KEY, T_OBJECT>::internalRemove(T_KEY const& key, bool keepN
     }
 }
 
-
+/*
 template <class T_KEY, class T_OBJECT>
 void MyDB_LRUCache<T_KEY, T_OBJECT>::printNodes()
 {
@@ -203,7 +202,7 @@ void MyDB_LRUCache<T_KEY, T_OBJECT>::printNodes()
     
     cout << "size: " << this->map.size() << endl;
 }
-
+*/
 
 #endif
 
