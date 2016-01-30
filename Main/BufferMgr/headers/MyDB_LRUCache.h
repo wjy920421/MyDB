@@ -113,7 +113,7 @@ T_OBJECT * MyDB_LRUCache<T_KEY, T_OBJECT>::getLeastUsed()
 {
     if(this->pLeastRecentNode == nullptr) return nullptr;
     
-    return this->pLeastRecentNode->pObject;
+    return this->get(*(this->pLeastRecentNode->pKey));
 }
 
 
