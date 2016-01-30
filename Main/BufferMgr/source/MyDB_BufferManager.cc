@@ -11,6 +11,15 @@ using namespace std;
 
 MyDB_BufferManager::MyDB_BufferManager (size_t pageSize, size_t numPages, string tempFile)
 {
+    this->pageSize = pageSize;
+    this->numPages = numPages;
+
+    // Allocate memory blocks
+    this->bufferPool = (void **) malloc(sizeof(void *) * numPages);
+    int i;
+    for(i = 0; i < numPages; i++)
+        this->bufferPool[i] = malloc(sizeof(char) * pageSize);
+
     pLRUCache = new MyDB_LRUCache<string, MyDB_Page>(numPages);
     if (pLRUCache->get("hello") != nullptr) cout << "not null" << endl;
     else cout << "is null" << endl;
@@ -19,6 +28,11 @@ MyDB_BufferManager::MyDB_BufferManager (size_t pageSize, size_t numPages, string
 MyDB_BufferManager::~MyDB_BufferManager ()
 {
     delete pLRUCache;
+
+    int i = 0;
+    for(i = 0; i < numPages; i++)
+        free(this->bufferPool[i]);
+    free(this->bufferPool);
 }
 
 
