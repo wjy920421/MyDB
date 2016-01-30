@@ -3,6 +3,7 @@
 #define PAGE_H
 
 #include <memory>
+#include "MyDB_Table.h"
 
 using namespace std;
 
@@ -10,11 +11,13 @@ class MyDB_Page
 {
 public:
 
-    MyDB_Page(void * address, int size);
+    MyDB_Page(void * address, int size, MyDB_TablePtr table, int index, bool pinned = false);
 
     void * getBytes();
     
     void wroteBytes();
+
+    void loadBytes();
 
 private:
 
@@ -24,7 +27,11 @@ private:
 
     bool isPinned;
 
-    static int referenceCounter = 0;
+    MyDB_TablePtr table;
+
+    int tableIndex;
+
+    int referenceCounter;
 };
 
 #endif

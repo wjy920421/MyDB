@@ -2,8 +2,10 @@
 #ifndef BUFFER_MGR_H
 #define BUFFER_MGR_H
 
+#include <string>
 #include "MyDB_PageHandle.h"
 #include "MyDB_Table.h"
+#include "MyDB_LRUCache.h"
 
 using namespace std;
 
@@ -51,7 +53,7 @@ public:
 
 private:
 
-	
+	MyDB_LRUCache<string, MyDB_Page> * pLRUCache;
 
 };
 

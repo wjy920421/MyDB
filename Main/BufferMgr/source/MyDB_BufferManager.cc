@@ -3,6 +3,7 @@
 #define BUFFER_MGR_C
 
 #include "MyDB_BufferManager.h"
+#include <iostream>
 #include <string>
 
 using namespace std;
@@ -10,12 +11,14 @@ using namespace std;
 
 MyDB_BufferManager::MyDB_BufferManager (size_t pageSize, size_t numPages, string tempFile)
 {
-
+    pLRUCache = new MyDB_LRUCache<string, MyDB_Page>(numPages);
+    if (pLRUCache->get("hello") != nullptr) cout << "not null" << endl;
+    else cout << "is null" << endl;
 }
 
 MyDB_BufferManager::~MyDB_BufferManager ()
 {
-
+    delete pLRUCache;
 }
 
 
