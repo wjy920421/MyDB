@@ -8,15 +8,15 @@
 
 using namespace std;
 
-class MyDB_AnonymousPage : MyDB_Page
+class MyDB_AnonymousPage : public MyDB_Page
 {
 public:
 
-    MyDB_AnonymousPage(void * address, int size, string tempFile, bool pinned = false);
+    MyDB_AnonymousPage(int pageID, void * address, int size, string tempFile, bool pinned = false);
 
 private:
 
-	string writeBackFile;
+	string tempFile;
    
 };
 

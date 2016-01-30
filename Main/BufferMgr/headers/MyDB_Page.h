@@ -11,7 +11,7 @@ class MyDB_Page
 {
 public:
 
-    MyDB_Page(void * address, int size, MyDB_TablePtr table, int index, bool pinned = false);
+    MyDB_Page(int pageID, void * address, int size, MyDB_TablePtr table, int index, bool pinned = false);
 
     void * getBytes();
     
