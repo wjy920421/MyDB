@@ -31,10 +31,6 @@ private:
 
     bool isPinned;
 
-    MyDB_TablePtr table;
-
-    int tableIndex;
-
     int referenceCounter;
 };
 
