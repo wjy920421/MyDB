@@ -17,6 +17,7 @@ public:
     MyDB_LRUCacheNode(T_KEY const& rKey, T_OBJECT const& rObject) : pKey(&rKey), pObject(&rObject)
     {
         this->pMoreRecentNode = this->pLessRecentNode = nullptr;
+        cout << "LRUCacheNode created" << endl;
     }
     
     ~MyDB_LRUCacheNode() { cout << "LRUCacheNode deleted" << endl; }
@@ -162,6 +163,7 @@ void MyDB_LRUCache<T_KEY, T_OBJECT>::internalRemove(T_KEY const& key, bool keepN
     if(! keepNode)
     {
         this->map.erase(key);
+        delete pNode;
     }
 }
 
