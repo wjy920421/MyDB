@@ -36,23 +36,23 @@ MyDB_BufferManager::~MyDB_BufferManager ()
 }
 
 
-MyDB_PageHandle MyDB_BufferManager :: getPage (MyDB_TablePtr, long) {
+MyDB_PageHandle MyDB_BufferManager::getPage (MyDB_TablePtr, long) {
 	return nullptr;		
 }
 
-MyDB_PageHandle MyDB_BufferManager :: getPage () {
+MyDB_PageHandle MyDB_BufferManager::getPage () {
 	return nullptr;		
 }
 
-MyDB_PageHandle MyDB_BufferManager :: getPinnedPage (MyDB_TablePtr, long) {
+MyDB_PageHandle MyDB_BufferManager::getPinnedPage (MyDB_TablePtr, long) {
 	return nullptr;		
 }
 
-MyDB_PageHandle MyDB_BufferManager :: getPinnedPage () {
+MyDB_PageHandle MyDB_BufferManager::getPinnedPage () {
 	return nullptr;		
 }
 
-void MyDB_BufferManager :: unpin (MyDB_PageHandle unpinMe) {
+void MyDB_BufferManager::unpin (MyDB_PageHandle unpinMe) {
 }
 	
 #endif
