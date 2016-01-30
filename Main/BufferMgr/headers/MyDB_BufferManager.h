@@ -55,6 +55,12 @@ private:
 
 	MyDB_LRUCache<string, MyDB_Page> * pLRUCache;
 
+	void ** bufferPool;
+
+	int pageSize;
+
+	int numPages;
+
 };
 
 #endif
