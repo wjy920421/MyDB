@@ -2,3 +2,4 @@ Build/bin/
 Build/bin/*
 Build/.sconsign.dblite
 *.o
+*.DS_Store
