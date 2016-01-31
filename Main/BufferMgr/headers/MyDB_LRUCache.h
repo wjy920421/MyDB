@@ -50,6 +50,10 @@ public:
     void set(T_KEY const& key, T_OBJECT const& object);
     
     void remove(T_KEY const& key);
+
+    int getCapacity();
+
+    void setCapacity(int capacity);
     
 private:
     
@@ -185,6 +189,24 @@ void MyDB_LRUCache<T_KEY, T_OBJECT>::internalRemove(T_KEY const& key, bool keepN
         delete pNode;
     }
 }
+
+
+template <class T_KEY, class T_OBJECT>
+int MyDB_LRUCache<T_KEY, T_OBJECT>::getCapacity()
+{
+    return this->capacity;
+}
+
+
+template <class T_KEY, class T_OBJECT>
+void MyDB_LRUCache<T_KEY, T_OBJECT>::setCapacity(int capacity)
+{
+    int prev_capacity = this->capacity;
+    this->capacity = capacity;
+
+    while(prev_capacity-- > capacity) this->remove(*(this->pLeastRecentNode->pKey));
+}
+
 
 /*
 template <class T_KEY, class T_OBJECT>
