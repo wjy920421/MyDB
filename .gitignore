@@ -1,4 +1,3 @@
-Build/bin/
 Build/bin/*
 Build/.sconsign.dblite
 *.o
