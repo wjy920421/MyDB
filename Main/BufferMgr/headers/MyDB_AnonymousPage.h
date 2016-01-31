@@ -17,7 +17,7 @@ public:
 
     void loadBytes();
 
-    virtual void release();
+    void release();
 
 private:
 
