@@ -18,15 +18,26 @@ MyDB_PageHandleBase :: ~MyDB_PageHandleBase ()
 }
 */
 
-void *MyDB_PageHandleBase :: getBytes ()
+void * MyDB_PageHandleBase::getBytes ()
 {
-	
-    return nullptr;
+    if(this->page == nullptr)
+    {
+        fprintf(stderr, "The page handler is not pointing to any pages");
+        return nullptr;
+    }
+
+    return this->page->getBytes();
 }
 
-void MyDB_PageHandleBase :: wroteBytes ()
+void MyDB_PageHandleBase::wroteBytes ()
 {
+    if(this->page == nullptr)
+    {
+        fprintf(stderr, "The page handler is not pointing to any pages");
+        return;
+    }
 
+    this->page->wroteBytes();
 }
 
 

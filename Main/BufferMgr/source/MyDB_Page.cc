@@ -28,6 +28,15 @@ void * MyDB_Page::getBytes()
     return this->pageAddress;
 }
 
+void MyDB_Page::wroteBytes()
+{
+
+}
+
+void MyDB_Page::loadBytes()
+{
+    
+}
 
 int MyDB_Page::getPageID()
 {
