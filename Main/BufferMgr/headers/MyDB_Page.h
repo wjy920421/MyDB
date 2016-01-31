@@ -15,13 +15,15 @@ public:
 
     void * getBytes();
     
-    void wroteBytes();
+    virtual void wroteBytes();
 
-    void loadBytes();
+    virtual void loadBytes();
 
-    void retain() { this->referenceCounter ++; }
+    virtual void retain() { this->referenceCounter ++; }
 
-    void release() { this->referenceCounter --; }
+    virtual void release() { this->referenceCounter --; }
+
+    void setPinned(bool pinned) { this->pinned = pinned; }
 
     bool isPinned() { return this->pinned; }
 

@@ -16,39 +16,37 @@ MyDB_AnonymousPage::MyDB_AnonymousPage(void * address, int size, string tempFile
 {
 
     this->tempFile = tempFile;
+}
 
-    this->loadBytes();
+void MyDB_AnonymousPage::release()
+{
+    MyDB_Page::release();
+
+    if(this->referenceCounter == 0) this->wroteBytes();
 }
 
 
 void MyDB_AnonymousPage::wroteBytes()
-{/*
-    if (! isPinned)
+{
+    if (! this->isPinned())
     {
-        int fd = open(this->table->getStorageLoc().c_str(), O_CREAT | O_WRONLY | O_FSYNC);
-        if( fd == -1 || lseek(fd, this->tableIndex * this->pageSize, SEEK_SET) == -1 || write(fd, this->pageAddress, this->pageSize) == -1 )
+        int fd = open(this->tempFile.c_str(), O_CREAT | O_WRONLY | O_APPEND | O_FSYNC);
+        if( fd == -1 || write(fd, this->pageAddress, this->pageSize) == -1 )
         {
-            perror("Failed to write to file");
+            fprintf(stderr, "Failed to write to file");
             exit(-1);
         }
         if(close(fd) == -1)
         {
-            perror("Failed to close file");
+            fprintf(stderr, "Failed to close file");
         }
-    }*/
+    }
 }
 
 
 void MyDB_AnonymousPage::loadBytes()
-{/*
-    int fd = open(this->table->getStorageLoc().c_str(), O_RDONLY | O_FSYNC);
-    if( fd == -1 || lseek(fd, this->tableIndex * this->pageSize, SEEK_SET) == -1 || read(fd, this->pageAddress, pageSize) == -1 )
-    {
-        perror("Failed to read from file");
-        exit(-1);
-    }
-    
-    close(fd);*/
+{
+
 }
 
 

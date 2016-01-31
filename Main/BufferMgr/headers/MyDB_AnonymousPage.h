@@ -17,6 +17,8 @@ public:
 
     void loadBytes();
 
+    virtual void release();
+
 private:
 
 	string tempFile;

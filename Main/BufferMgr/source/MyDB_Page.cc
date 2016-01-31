@@ -35,7 +35,7 @@ void MyDB_Page::wroteBytes()
 
 void MyDB_Page::loadBytes()
 {
-    
+
 }
 
 int MyDB_Page::getPageID()
