@@ -69,7 +69,8 @@ MyDB_PageHandle MyDB_BufferManager::getPage (MyDB_TablePtr whichTable, long i)
     }
     else if ((page = this->pinnedLRUCache->get(pageID)) != nullptr)
     {
-        this->doDelegateUnpin(pageID);
+        // getPage returns the existing pinned page without unpinning it
+        // this->doDelegateUnpin(pageID);
         return make_shared<MyDB_PageHandleBase>(page);
     }
     else if(this->unpinnedLRUCache->getCapacity() != 0)
@@ -115,7 +116,10 @@ MyDB_PageHandle MyDB_BufferManager::getPinnedPage (MyDB_TablePtr whichTable, lon
     }
     else if ((page = this->unpinnedLRUCache->get(pageID)) != nullptr)
     {
+        ////////////////////////////
+        // Pins the existing page //
         this->doDelegatePin(pageID);
+        ////////////////////////////
         return make_shared<MyDB_PageHandleBase>(page);
     }
     else if(this->pinnedLRUCache->size() < this->numPages)
