@@ -28,6 +28,9 @@ public:
     // Write the page to the mapped file
     virtual void writeToFile() {}
 
+    // Load data from the mapped file
+    virtual void loadFromFile() {}
+
     // Increase the reference counter by one
     // Called when a page handler is constructed
     virtual void retain() { this->referenceCounter ++; }
