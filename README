@@ -1,0 +1,9 @@
+Jingyu Wang (jw76)
+
+Jan 31, 2016
+
+Build:
+Go to "Build", and use "SCons" to build the project. The executable file will be built inside "bin". 
+
+Usage:
+Simply run the excutable file, which will go through all unit tests automatically. 
