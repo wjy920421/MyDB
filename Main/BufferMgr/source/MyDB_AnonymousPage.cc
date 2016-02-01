@@ -20,7 +20,7 @@ MyDB_AnonymousPage::MyDB_AnonymousPage(void * address, int size, string tempFile
 
 MyDB_AnonymousPage::~MyDB_AnonymousPage()
 {
-    if(!this->evicted) this->writeToFile();
+    //if(!this->evicted) this->writeToFile();
 }
 
 void MyDB_AnonymousPage::release()
