@@ -38,6 +38,47 @@ int main () {
 
 	QUnit::UnitTest qunit(cerr, QUnit::verbose);
 
+	{
+		MyDB_BufferManager myMgr (64, 64, "tempDSFSD");
+		MyDB_TablePtr table1 = make_shared <MyDB_Table> ("tempTable", "foobar");
+		vector <MyDB_PageHandle> myHandles;
+		for (int i = 0; i < 64; i++) {
+			cout << "allocating pinned page\n";
+			MyDB_PageHandle temp = myMgr.getPinnedPage (table1, i);
+			char *bytes = (char *) temp->getBytes ();
+			if (i % 3 == 0)
+				writeNums (bytes, 64, i);
+			else if (i % 3 == 1)
+				writeSymbols (bytes, 64, i);
+			else
+				writeLetters (bytes, 64, i);
+			temp->wroteBytes ();
+			myHandles.push_back (temp);
+		}
+		//vector <MyDB_PageHandle> temp;
+		//myHandles = temp;
+	}
+
+	{
+		MyDB_BufferManager myMgr (64, 64, "tempDSFSD");
+		MyDB_TablePtr table1 = make_shared <MyDB_Table> ("tempTable", "foobar");
+
+		// look up all of the pages, and make sure they have the correct numbers
+		for (int i = 0; i < 64; i++) {
+			MyDB_PageHandle temp = myMgr.getPage (table1, i);
+			char answer[64];
+			if (i % 3 == 0)
+				writeNums (answer, 64, i);
+			else if (i % 3 == 1)
+				writeSymbols (answer, 64, i);
+			else
+				writeLetters (answer, 64, i);
+			char *bytes = (char *) temp->getBytes ();
+			QUNIT_IS_EQUAL (string (answer), string (bytes));
+		}
+	}
+
+	/*
 	// UNIT TEST 1: A BIG ONE!!
 	{
 
@@ -145,6 +186,7 @@ int main () {
 			QUNIT_IS_EQUAL (string (answer), string (bytes));
 		}
 	}
+	*/
 }
 
 #endif
