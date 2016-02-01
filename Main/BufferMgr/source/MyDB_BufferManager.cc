@@ -32,6 +32,7 @@ MyDB_BufferManager::MyDB_BufferManager (size_t pageSize, size_t numPages, string
     
     this->bufferManagerDelegate.unpin = bind(&MyDB_BufferManager::doDelegateUnpin, this, placeholders::_1);
     this->bufferManagerDelegate.release = bind(&MyDB_BufferManager::doDelegateRelease, this, placeholders::_1);
+    this->bufferManagerDelegate.reload = bind(&MyDB_BufferManager::doDelegateReload, this, placeholders::_1);
 }
 
 MyDB_BufferManager::~MyDB_BufferManager ()
@@ -217,6 +218,32 @@ void MyDB_BufferManager::doDelegateRelease(string pageID)
     
     releasedPage->writeToFile();
     releasedPage->evict();
+    releasedPage->setBuffer(nullptr);
+}
+
+
+void MyDB_BufferManager::doDelegateReload(string pageID)
+{
+    MyDB_Page * reloadPage;
+    
+    if((reloadPage = this->pinnedLRUCache->get(pageID)) != nullptr)
+    {
+        reloadPage->loadFromFile();
+    }
+    else if((reloadPage = this->unpinnedLRUCache->get(pageID)) != nullptr)
+    {
+        reloadPage->loadFromFile();
+    }
+    else if(this->unpinnedLRUCache->getCapacity() != 0)
+    {
+        if(this->availableBufferPool.empty())
+            this->doDelegateRelease(this->unpinnedLRUCache->getLeastRecent()->getPageID());
+        
+        reloadPage->setBuffer(this->availableBufferPool.front());
+        this->availableBufferPool.pop();
+        this->unpinnedLRUCache->set(reloadPage->getPageID(), *reloadPage);
+        reloadPage->loadFromFile();
+    }
 }
 
 

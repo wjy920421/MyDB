@@ -29,6 +29,12 @@ MyDB_Page::MyDB_Page(void * address, int size, bool pinned)
 
 void * MyDB_Page::getBytes()
 {
+    if(this->evicted)
+    {
+        this->bufferManagerDelegate.reload(this->pageID);
+        this->loadFromFile();
+    }
+
     return this->pageAddress;
 }
 
