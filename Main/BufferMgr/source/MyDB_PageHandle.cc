@@ -2,7 +2,6 @@
 #ifndef PAGE_HANDLE_C
 #define PAGE_HANDLE_C
 
-#include <memory>
 #include "MyDB_PageHandle.h"
 
 
@@ -12,18 +11,22 @@ MyDB_PageHandleBase::MyDB_PageHandleBase(MyDB_Page * page)
     if(this->page != nullptr)
     {
         this->page->retain();
-        this->pageID = page->getPageID();
     }
 }
 
 
-MyDB_PageHandleBase::~MyDB_PageHandleBase ()
+MyDB_PageHandleBase::~MyDB_PageHandleBase()
 {
     if(this->page != nullptr) this->page->release();
 }
 
+string MyDB_PageHandleBase::getPageID()
+{
+    return (page != nullptr)?  page->getPageID(): "";
+}
 
-void * MyDB_PageHandleBase::getBytes ()
+
+void * MyDB_PageHandleBase::getBytes()
 {
     if(this->page == nullptr)
     {
@@ -34,7 +37,7 @@ void * MyDB_PageHandleBase::getBytes ()
     return this->page->getBytes();
 }
 
-void MyDB_PageHandleBase::wroteBytes ()
+void MyDB_PageHandleBase::wroteBytes()
 {
     if(this->page == nullptr)
     {

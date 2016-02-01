@@ -7,77 +7,103 @@
 
 using namespace std;
 
-
+// Node in LRU Cache
 template <class T_KEY, class T_OBJECT>
 
 class MyDB_LRUCacheNode
 {
 public:
     
+    // Constructor
     MyDB_LRUCacheNode(T_KEY key, T_OBJECT const& rObject) : key(key), pObject(&rObject)
     {
         this->pMoreRecentNode = this->pLessRecentNode = nullptr;
-        //cout << "LRUCacheNode created" << endl;
     }
     
-    ~MyDB_LRUCacheNode() { /*cout << "LRUCacheNode deleted" << endl;*/ }
-    
+    // Key to the actual object
     const T_KEY key;
     
+    // Pointer to the actual object
     const T_OBJECT * pObject;
     
+    // Pointer to the next more recently used node
     MyDB_LRUCacheNode * pMoreRecentNode;
     
+    // Pointer to the next less recently used node
     MyDB_LRUCacheNode * pLessRecentNode;
     
 };
 
 
+// LRU Cache
 template <class T_KEY, class T_OBJECT>
 
 class MyDB_LRUCache
 {
 public:
     
-    MyDB_LRUCache(int capacity) { this->capacity = capacity; pMostRecentNode = pLeastRecentNode = nullptr; }
+    // Constructor
+    MyDB_LRUCache(int capacity);
     
+    // Destructor
     ~MyDB_LRUCache();
     
+    // Accesses and returns the specified object
     T_OBJECT * get(T_KEY key);
     
-    T_OBJECT * getLeastUsed();
+    // Accesses and return the least recently used object
+    T_OBJECT * getLeastRecent();
     
+    // Inserts an object
     T_OBJECT * set(T_KEY key, T_OBJECT const& object);
     
+    // Removes a specified object
     T_OBJECT * remove(T_KEY key);
-    
-    T_OBJECT * cleanGet(T_KEY key);
-    
-    T_OBJECT * cleanSet(T_KEY key, T_OBJECT const& object);
 
+    // Removes the least recently used object
+    T_OBJECT * removeLeastRecent();
+    
+    // Returns a specified object without changing the order of nodes
+    T_OBJECT * cleanGet(T_KEY key);
+
+    // Returns the size of the LRU
     int size() { return this->map.size(); }
 
+    // Returns the capacity of the LRU
     int getCapacity();
 
+    // Set the capacity of the LRU
     void setCapacity(int capacity);
     
 private:
     
+    // Capacity of the LRU
     int capacity;
     
+    // Hash map from keys to LRU nodes
     unordered_map<T_KEY, MyDB_LRUCacheNode<T_KEY, T_OBJECT> * > map;
     
+    // Pointer to the most recently used LRU node
     MyDB_LRUCacheNode<T_KEY, T_OBJECT> * pMostRecentNode;
     
+    // Pointer to the least recent used LRU node
     MyDB_LRUCacheNode<T_KEY, T_OBJECT> * pLeastRecentNode;
     
+    // Inserts an object
     T_OBJECT * internalSet(T_KEY key, T_OBJECT const& object, bool createNode = true);
     
+    // Removes a specified object
     T_OBJECT * internalRemove(T_KEY key, bool keepNode = false);
     
-    void printNodes();
-    
 };
+
+
+template <class T_KEY, class T_OBJECT>
+MyDB_LRUCache<T_KEY, T_OBJECT>::MyDB_LRUCache(int capacity)
+{
+    this->capacity = capacity;
+    pMostRecentNode = pLeastRecentNode = nullptr;
+}
 
 
 template <class T_KEY, class T_OBJECT>
@@ -85,15 +111,12 @@ MyDB_LRUCache<T_KEY, T_OBJECT>::~MyDB_LRUCache()
 {
     MyDB_LRUCacheNode<T_KEY, T_OBJECT> * pNode = pLeastRecentNode;
     MyDB_LRUCacheNode<T_KEY, T_OBJECT> * pNext;
-    //cout << "size of map: " << map.size() << endl;
     while(pNode != nullptr)
     {
         pNext = pNode->pMoreRecentNode;
         this->remove(pNode->key);
         pNode = pNext;
-        //cout << "size of map: " << map.size() << endl;
     }
-    //cout << "size of map: " << map.size() << endl;
 }
 
 
@@ -119,7 +142,7 @@ T_OBJECT * MyDB_LRUCache<T_KEY, T_OBJECT>::set(T_KEY key, T_OBJECT const& object
 
 
 template <class T_KEY, class T_OBJECT>
-T_OBJECT * MyDB_LRUCache<T_KEY, T_OBJECT>::getLeastUsed()
+T_OBJECT * MyDB_LRUCache<T_KEY, T_OBJECT>::getLeastRecent()
 {
     if(this->pLeastRecentNode == nullptr) return nullptr;
     
@@ -131,6 +154,15 @@ template <class T_KEY, class T_OBJECT>
 T_OBJECT * MyDB_LRUCache<T_KEY, T_OBJECT>::remove(T_KEY key)
 {
     return this->internalRemove(key);
+}
+
+
+template <class T_KEY, class T_OBJECT>
+T_OBJECT * MyDB_LRUCache<T_KEY, T_OBJECT>::removeLeastRecent()
+{
+    if(this->pLeastRecentNode == nullptr) return nullptr;
+
+    return this->internalRemove(this->pLeastRecentNode->key);
 }
 
 
@@ -163,19 +195,13 @@ T_OBJECT * MyDB_LRUCache<T_KEY, T_OBJECT>::internalSet(T_KEY key, T_OBJECT const
         this->pMostRecentNode = pNode;
     }
     
-    this->printNodes();
-    
     if(map.size() > capacity)
     {
         T_OBJECT * removedObject = const_cast<T_OBJECT *>(this->pLeastRecentNode->pObject);
         this->remove(this->pLeastRecentNode->key);
         
-        this->printNodes();
-        
         return removedObject;
     }
-    
-    //this->printNodes();
 
     return nullptr;
 }
@@ -222,27 +248,6 @@ void MyDB_LRUCache<T_KEY, T_OBJECT>::setCapacity(int capacity)
     this->capacity = capacity;
 
     if(this->pLeastRecentNode != nullptr) while(this->map.size() > capacity) this->remove(this->pLeastRecentNode->key);
-}
-
-
-
-template <class T_KEY, class T_OBJECT>
-void MyDB_LRUCache<T_KEY, T_OBJECT>::printNodes()
-{
-    /*
-    MyDB_LRUCacheNode<T_KEY, T_OBJECT> * p = pMostRecentNode;
-    while(p != nullptr)
-    {
-        if(p->pObject!=nullptr) cout << "key: " << p->key << ", value: " << "object" << "; ";
-        else cout << "key: " << p->key << ", value: " << "null" << "; ";
-        p = p->pLessRecentNode;
-    }
-    cout << "most recently used: " << "key: " << pMostRecentNode->key << "; ";
-    cout << "least recently used: " << "key: " << pLeastRecentNode->key << "; ";
-    cout << endl;
-    
-    cout << "size: " << this->map.size() << endl;
-     */
 }
 
 

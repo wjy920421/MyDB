@@ -2,7 +2,6 @@
 #ifndef FILE_PAGE_C
 #define FILE_PAGE_C
 
-#include <memory>
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
@@ -23,7 +22,7 @@ MyDB_FilePage::MyDB_FilePage(void * address, int size, MyDB_TablePtr table, long
 
 MyDB_FilePage::~MyDB_FilePage()
 {
-    //this->writeToFile();
+
 }
 
 

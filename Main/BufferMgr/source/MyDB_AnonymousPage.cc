@@ -2,7 +2,6 @@
 #ifndef ANONYMOUS_PAGE_C
 #define ANONYMOUS_PAGE_C
 
-#include <memory>
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
