@@ -6,8 +6,19 @@
 
 using namespace std;
 
-typedef function<void(string)> DelegateUnpin;
-typedef function<void(string)> DelegateRelease;
+typedef function<void(string)> BufferManagerDelegateUnpin;
+typedef function<void(string)> BufferManagerDelegateRelease;
+
+class BufferManagerDelegate
+{
+public:
+
+    // Delegate function to unpin a specified page
+    BufferManagerDelegateUnpin unpin;
+    
+    // Delegate function to lease a specified page
+    BufferManagerDelegateRelease release;
+};
 
 
-#endif /* MyDB_BufferManagerDelegate_h */
+#endif

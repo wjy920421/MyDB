@@ -52,7 +52,7 @@ public:
     void * getBuffer() { return this->getBytes(); }
     
     // Set delegate
-    void setDelegate(DelegateUnpin delegateUnpin, DelegateRelease delegateRelease) { this->delegateUnpin = delegateUnpin; this->delegateRelease = delegateRelease; }
+    void setDelegate(BufferManagerDelegate delegate) { this->bufferManagerDelegate = delegate; }
     
     // Evict the page out of buffer
     void evict() { this->evicted = true; }
@@ -84,10 +84,7 @@ protected:
     static int pageIDCounter;
     
     // Delegate
-    DelegateUnpin delegateUnpin;
-    
-    // Delegate
-    DelegateRelease delegateRelease;
+    BufferManagerDelegate bufferManagerDelegate;
     
 };
 

@@ -29,7 +29,7 @@ void MyDB_AnonymousPage::release()
 
     if(this->referenceCounter == 0)
     {
-        this->delegateRelease(this->pageID);
+        this->bufferManagerDelegate.release(this->pageID);
         delete this;
     }
 }

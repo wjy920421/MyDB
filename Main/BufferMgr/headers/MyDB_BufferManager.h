@@ -79,11 +79,8 @@ private:
     // Location of temporary file
     string tempFile;
     
-    // Delegate function to unpin a specified page
-    DelegateUnpin delegateUnpin;
-    
-    // Delegate function to release a specified page
-    DelegateRelease delegateRelease;
+    // Delegate object
+    BufferManagerDelegate bufferManagerDelegate;
     
     // Unpin a specified page
     void doDelegateUnpin(string pageID);

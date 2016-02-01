@@ -34,12 +34,12 @@ void MyDB_FilePage::release()
     {
         if(this->evicted)
         {
-            this->delegateRelease(this->pageID);
+            this->bufferManagerDelegate.release(this->pageID);
             delete this;
         }
         else if(this->isPinned())
         {
-            this->delegateUnpin(this->pageID);
+            this->bufferManagerDelegate.unpin(this->pageID);
         }
     }
 }

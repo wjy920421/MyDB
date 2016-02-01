@@ -30,8 +30,8 @@ MyDB_BufferManager::MyDB_BufferManager (size_t pageSize, size_t numPages, string
     pinnedLRUCache = new MyDB_LRUCache<string, MyDB_Page>(0);
     unpinnedLRUCache = new MyDB_LRUCache<string, MyDB_Page>(numPages);
     
-    this->delegateUnpin = bind(&MyDB_BufferManager::doDelegateUnpin, this, placeholders::_1);
-    this->delegateRelease = bind(&MyDB_BufferManager::doDelegateRelease, this, placeholders::_1);
+    this->bufferManagerDelegate.unpin = bind(&MyDB_BufferManager::doDelegateUnpin, this, placeholders::_1);
+    this->bufferManagerDelegate.release = bind(&MyDB_BufferManager::doDelegateRelease, this, placeholders::_1);
 }
 
 MyDB_BufferManager::~MyDB_BufferManager ()
@@ -78,7 +78,7 @@ MyDB_PageHandle MyDB_BufferManager::getPage (MyDB_TablePtr whichTable, long i)
             this->doDelegateRelease(this->unpinnedLRUCache->getLeastRecent()->getPageID());
         
         page = new MyDB_FilePage(this->availableBufferPool.front(), this->pageSize, whichTable, i);
-        page->setDelegate(delegateUnpin, delegateRelease);
+        page->setDelegate(this->bufferManagerDelegate);
         this->availableBufferPool.pop();
         this->unpinnedLRUCache->set(page->getPageID(), *page);
         return make_shared<MyDB_PageHandleBase>(page);
@@ -95,7 +95,7 @@ MyDB_PageHandle MyDB_BufferManager::getPage ()
             this->doDelegateRelease(this->unpinnedLRUCache->getLeastRecent()->getPageID());
         
         MyDB_Page * page = new MyDB_AnonymousPage(this->availableBufferPool.front(), this->pageSize, this->tempFile);
-        page->setDelegate(delegateUnpin, delegateRelease);
+        page->setDelegate(this->bufferManagerDelegate);
         this->availableBufferPool.pop();
         this->unpinnedLRUCache->set(page->getPageID(), *page);
         return make_shared<MyDB_PageHandleBase>(page);
@@ -123,7 +123,7 @@ MyDB_PageHandle MyDB_BufferManager::getPinnedPage (MyDB_TablePtr whichTable, lon
         this->pinnedLRUCache->setCapacity(this->pinnedLRUCache->getCapacity() + 1);
         this->unpinnedLRUCache->setCapacity(this->unpinnedLRUCache->getCapacity() - 1);
         page = new MyDB_FilePage(this->availableBufferPool.front(), this->pageSize, whichTable, i, true);
-        page->setDelegate(delegateUnpin, delegateRelease);
+        page->setDelegate(this->bufferManagerDelegate);
         this->availableBufferPool.pop();
         this->pinnedLRUCache->set(page->getPageID(), *page);
         return make_shared<MyDB_PageHandleBase>(page);
@@ -136,7 +136,7 @@ MyDB_PageHandle MyDB_BufferManager::getPinnedPage (MyDB_TablePtr whichTable, lon
         this->pinnedLRUCache->setCapacity(this->pinnedLRUCache->getCapacity() + 1);
         this->unpinnedLRUCache->setCapacity(this->unpinnedLRUCache->getCapacity() - 1);
         page = new MyDB_FilePage(this->availableBufferPool.front(), this->pageSize, whichTable, i, true);
-        page->setDelegate(delegateUnpin, delegateRelease);
+        page->setDelegate(this->bufferManagerDelegate);
         this->availableBufferPool.pop();
         this->pinnedLRUCache->set(page->getPageID(), *page);
         return make_shared<MyDB_PageHandleBase>(page);
@@ -155,7 +155,7 @@ MyDB_PageHandle MyDB_BufferManager::getPinnedPage ()
         this->pinnedLRUCache->setCapacity(this->pinnedLRUCache->getCapacity() + 1);
         this->unpinnedLRUCache->setCapacity(this->unpinnedLRUCache->getCapacity() - 1);
         MyDB_Page * page = new MyDB_AnonymousPage(this->availableBufferPool.front(), this->pageSize, this->tempFile, true);
-        page->setDelegate(delegateUnpin, delegateRelease);
+        page->setDelegate(this->bufferManagerDelegate);
         this->availableBufferPool.pop();
         this->pinnedLRUCache->set(page->getPageID(), *page);
         return make_shared<MyDB_PageHandleBase>(page);
