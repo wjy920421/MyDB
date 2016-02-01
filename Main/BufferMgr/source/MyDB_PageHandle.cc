@@ -5,18 +5,23 @@
 #include <memory>
 #include "MyDB_PageHandle.h"
 
-/*
-void MyDB_PageHandleBase::MyDB_PageHandleBase(MyDB_Page * page)
+
+MyDB_PageHandleBase::MyDB_PageHandleBase(MyDB_Page * page)
 {
     this->page = page;
+    if(this->page != nullptr)
+    {
+        this->page->retain();
+        this->pageID = page->getPageID();
+    }
 }
 
 
-MyDB_PageHandleBase :: ~MyDB_PageHandleBase ()
+MyDB_PageHandleBase::~MyDB_PageHandleBase ()
 {
-
+    if(this->page != nullptr) this->page->release();
 }
-*/
+
 
 void * MyDB_PageHandleBase::getBytes ()
 {

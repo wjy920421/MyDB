@@ -12,10 +12,10 @@ class MyDB_AnonymousPage : public MyDB_Page
 public:
 
     MyDB_AnonymousPage(void * address, int size, string tempFile, bool pinned = false);
-
-    void wroteBytes();
-
-    void loadBytes();
+    
+    ~MyDB_AnonymousPage();
+    
+    void writeToFile();
 
     void release();
 

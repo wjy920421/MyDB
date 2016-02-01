@@ -11,15 +11,19 @@
 
 using namespace std;
 
+
 int MyDB_Page::pageIDCounter = 0;
+
 
 MyDB_Page::MyDB_Page(void * address, int size, bool pinned)
 {
-    referenceCounter = 0;
-    this->pageID = MyDB_Page::pageIDCounter++;
+    this->referenceCounter = 0;
+    this->pageID = to_string(MyDB_Page::pageIDCounter++);
     this->pageAddress = address;
     this->pageSize = size;
     this->pinned = pinned;
+    this->dirty = false;
+    this->evicted = false;
 }
 
 
@@ -28,17 +32,8 @@ void * MyDB_Page::getBytes()
     return this->pageAddress;
 }
 
-void MyDB_Page::wroteBytes()
-{
 
-}
-
-void MyDB_Page::loadBytes()
-{
-
-}
-
-int MyDB_Page::getPageID()
+string MyDB_Page::getPageID()
 {
     return this->pageID;
 }

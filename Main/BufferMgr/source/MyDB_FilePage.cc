@@ -12,40 +12,78 @@
 using namespace std;
 
 
-MyDB_FilePage::MyDB_FilePage(void * address, int size, MyDB_TablePtr table, int index, bool pinned): MyDB_Page(address, size, pinned)
+MyDB_FilePage::MyDB_FilePage(void * address, int size, MyDB_TablePtr table, long index, bool pinned): MyDB_Page(address, size, pinned)
 {
+    this->pageID = MyDB_FilePage::generatePageID(table, index);
     this->table = table;
     this->tableIndex = index;
-
-    this->loadBytes();
+    this->loadFromFile();
 }
 
 
-void MyDB_FilePage::wroteBytes()
+MyDB_FilePage::~MyDB_FilePage()
 {
-    if (! this->isPinned())
+    //this->writeToFile();
+}
+
+
+void MyDB_FilePage::release()
+{
+    MyDB_Page::release();
+    
+    if(this->referenceCounter == 0)
     {
-        int fd = open(this->table->getStorageLoc().c_str(), O_CREAT | O_WRONLY | O_FSYNC);
-        if( fd == -1 || lseek(fd, this->tableIndex * this->pageSize, SEEK_SET) == -1 || write(fd, this->pageAddress, this->pageSize) == -1 )
+        if(this->evicted)
         {
-            fprintf(stderr, "Failed to write to file");
-            exit(-1);
+            this->delegateRelease(this->pageID);
+            delete this;
         }
-        if(close(fd) == -1)
+        else if(this->isPinned())
         {
-            fprintf(stderr, "Failed to close file");
+            this->delegateUnpin(this->pageID);
         }
     }
 }
 
 
-void MyDB_FilePage::loadBytes()
+string MyDB_FilePage::generatePageID(MyDB_TablePtr table, int index)
 {
-    int fd = open(this->table->getStorageLoc().c_str(), O_RDONLY | O_FSYNC);
-    if( fd == -1 || lseek(fd, this->tableIndex * this->pageSize, SEEK_SET) == -1 || read(fd, this->pageAddress, pageSize) == -1 )
+    return table->getName() + "_" + to_string(index);
+}
+
+
+void MyDB_FilePage::writeToFile()
+{
+    if (!this->isPinned() && this->dirty)
+    {
+        int fd = open(this->table->getStorageLoc().c_str(), O_CREAT | O_RDWR | O_FSYNC, S_IRWXU );
+        if( fd == -1 || lseek(fd, this->tableIndex * this->pageSize, SEEK_SET) == -1 || write(fd, this->pageAddress, this->pageSize) == -1 )
+        {
+            fprintf(stderr, "Failed to write page \'%s\' to \'%s\'", this->pageID.c_str(), this->table->getStorageLoc().c_str());
+            exit(-1);
+        }
+        if(close(fd) == -1)
+        {
+            fprintf(stderr, "Failed to close \'%s\'", this->table->getStorageLoc().c_str());
+        }
+    }
+}
+
+
+void MyDB_FilePage::loadFromFile()
+{
+    int fd = open(this->table->getStorageLoc().c_str(), O_CREAT | O_RDWR | O_FSYNC, S_IRWXU );
+    if( fd == -1 )
+    {
+        fprintf(stderr, "Failed to open file");
+    }
+    else if ( lseek(fd, this->tableIndex * this->pageSize, SEEK_SET) == -1 )
+    {
+        fprintf(stderr, "Failed to use lseek");
+    }
+    else if ( read(fd, this->pageAddress, pageSize) == -1 )
     {
         fprintf(stderr, "Failed to read from file");
-        exit(-1);
     }
     
     close(fd);

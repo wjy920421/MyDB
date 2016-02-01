@@ -2,12 +2,15 @@
 #ifndef PAGE_HANDLE_H
 #define PAGE_HANDLE_H
 
+#include <functional>
 #include <memory>
 #include "MyDB_Page.h"
 
 // page handles are basically smart pointers
 using namespace std;
+
 class MyDB_PageHandleBase;
+
 typedef shared_ptr <MyDB_PageHandleBase> MyDB_PageHandle;
 
 class MyDB_PageHandleBase {
@@ -32,14 +35,19 @@ public:
 	// to the particular page that it references.  If the number of 
 	// references to a pinned page goes down to zero, then the page should
 	// become unpinned.  
-	~MyDB_PageHandleBase () { if(this->page) this->page->release(); }
+    ~MyDB_PageHandleBase ();
 
-	MyDB_PageHandleBase(MyDB_Page * page) { this->page = page; if(this->page) this->page->retain(); }
+    MyDB_PageHandleBase (MyDB_Page * page);
+
+	string getPageID() { return (page != nullptr)?  page->getPageID(): ""; }
 
 private:
 
 	MyDB_Page * page;
-
+    
+    string pageID;
+    
+    void invalidate();
 };
 
 #endif

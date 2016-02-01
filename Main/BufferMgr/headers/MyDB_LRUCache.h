@@ -14,7 +14,7 @@ class MyDB_LRUCacheNode
 {
 public:
     
-    MyDB_LRUCacheNode(T_KEY const& rKey, T_OBJECT const& rObject) : pKey(&rKey), pObject(&rObject)
+    MyDB_LRUCacheNode(T_KEY key, T_OBJECT const& rObject) : key(key), pObject(&rObject)
     {
         this->pMoreRecentNode = this->pLessRecentNode = nullptr;
         //cout << "LRUCacheNode created" << endl;
@@ -22,7 +22,7 @@ public:
     
     ~MyDB_LRUCacheNode() { /*cout << "LRUCacheNode deleted" << endl;*/ }
     
-    const T_KEY * pKey;
+    const T_KEY key;
     
     const T_OBJECT * pObject;
     
@@ -43,13 +43,19 @@ public:
     
     ~MyDB_LRUCache();
     
-    T_OBJECT * get(T_KEY const& key);
+    T_OBJECT * get(T_KEY key);
     
     T_OBJECT * getLeastUsed();
     
-    void set(T_KEY const& key, T_OBJECT const& object);
+    T_OBJECT * set(T_KEY key, T_OBJECT const& object);
     
-    void remove(T_KEY const& key);
+    T_OBJECT * remove(T_KEY key);
+    
+    T_OBJECT * cleanGet(T_KEY key);
+    
+    T_OBJECT * cleanSet(T_KEY key, T_OBJECT const& object);
+
+    int size() { return this->map.size(); }
 
     int getCapacity();
 
@@ -65,11 +71,11 @@ private:
     
     MyDB_LRUCacheNode<T_KEY, T_OBJECT> * pLeastRecentNode;
     
-    void internalSet(T_KEY const& key, T_OBJECT const& object, bool createNode = true);
+    T_OBJECT * internalSet(T_KEY key, T_OBJECT const& object, bool createNode = true);
     
-    void internalRemove(T_KEY const& key, bool keepNode = false);
+    T_OBJECT * internalRemove(T_KEY key, bool keepNode = false);
     
-    //void printNodes();
+    void printNodes();
     
 };
 
@@ -83,7 +89,7 @@ MyDB_LRUCache<T_KEY, T_OBJECT>::~MyDB_LRUCache()
     while(pNode != nullptr)
     {
         pNext = pNode->pMoreRecentNode;
-        this->remove(*(pNode->pKey));
+        this->remove(pNode->key);
         pNode = pNext;
         //cout << "size of map: " << map.size() << endl;
     }
@@ -92,7 +98,7 @@ MyDB_LRUCache<T_KEY, T_OBJECT>::~MyDB_LRUCache()
 
 
 template <class T_KEY, class T_OBJECT>
-T_OBJECT * MyDB_LRUCache<T_KEY, T_OBJECT>::get(T_KEY const& key)
+T_OBJECT * MyDB_LRUCache<T_KEY, T_OBJECT>::get(T_KEY key)
 {
     if(this->map.count(key) == 0) return nullptr;
     
@@ -106,9 +112,9 @@ T_OBJECT * MyDB_LRUCache<T_KEY, T_OBJECT>::get(T_KEY const& key)
 
 
 template <class T_KEY, class T_OBJECT>
-void MyDB_LRUCache<T_KEY, T_OBJECT>::set(T_KEY const& key, T_OBJECT const& object)
+T_OBJECT * MyDB_LRUCache<T_KEY, T_OBJECT>::set(T_KEY key, T_OBJECT const& object)
 {
-    this->internalSet(key, object);
+    return this->internalSet(key, object);
 }
 
 
@@ -117,19 +123,19 @@ T_OBJECT * MyDB_LRUCache<T_KEY, T_OBJECT>::getLeastUsed()
 {
     if(this->pLeastRecentNode == nullptr) return nullptr;
     
-    return this->get(*(this->pLeastRecentNode->pKey));
+    return this->get(this->pLeastRecentNode->key);
 }
 
 
 template <class T_KEY, class T_OBJECT>
-void MyDB_LRUCache<T_KEY, T_OBJECT>::remove(T_KEY const& key)
+T_OBJECT * MyDB_LRUCache<T_KEY, T_OBJECT>::remove(T_KEY key)
 {
-    this->internalRemove(key);
+    return this->internalRemove(key);
 }
 
 
 template <class T_KEY, class T_OBJECT>
-void MyDB_LRUCache<T_KEY, T_OBJECT>::internalSet(T_KEY const& key, T_OBJECT const& object, bool createNode)
+T_OBJECT * MyDB_LRUCache<T_KEY, T_OBJECT>::internalSet(T_KEY key, T_OBJECT const& object, bool createNode)
 {
     MyDB_LRUCacheNode<T_KEY, T_OBJECT> * pNode;
     
@@ -157,20 +163,30 @@ void MyDB_LRUCache<T_KEY, T_OBJECT>::internalSet(T_KEY const& key, T_OBJECT cons
         this->pMostRecentNode = pNode;
     }
     
+    this->printNodes();
+    
     if(map.size() > capacity)
     {
-        this->remove(*(this->pLeastRecentNode->pKey));
+        T_OBJECT * removedObject = const_cast<T_OBJECT *>(this->pLeastRecentNode->pObject);
+        this->remove(this->pLeastRecentNode->key);
+        
+        this->printNodes();
+        
+        return removedObject;
     }
     
     //this->printNodes();
+
+    return nullptr;
 }
 
 template <class T_KEY, class T_OBJECT>
-void MyDB_LRUCache<T_KEY, T_OBJECT>::internalRemove(T_KEY const& key, bool keepNode)
+T_OBJECT * MyDB_LRUCache<T_KEY, T_OBJECT>::internalRemove(T_KEY key, bool keepNode)
 {
-    if(this->map.count(key) == 0) return;
+    if(this->map.count(key) == 0) return nullptr;
     
     MyDB_LRUCacheNode<T_KEY, T_OBJECT> * pNode = this->map[key];
+    T_OBJECT * removedObject = const_cast<T_OBJECT *>(pNode->pObject);
     
     MyDB_LRUCacheNode<T_KEY, T_OBJECT> * pMoreRecentNode = pNode->pMoreRecentNode;
     MyDB_LRUCacheNode<T_KEY, T_OBJECT> * pLessRecentNode = pNode->pLessRecentNode;
@@ -188,6 +204,8 @@ void MyDB_LRUCache<T_KEY, T_OBJECT>::internalRemove(T_KEY const& key, bool keepN
         this->map.erase(key);
         delete pNode;
     }
+
+    return removedObject;
 }
 
 
@@ -201,30 +219,32 @@ int MyDB_LRUCache<T_KEY, T_OBJECT>::getCapacity()
 template <class T_KEY, class T_OBJECT>
 void MyDB_LRUCache<T_KEY, T_OBJECT>::setCapacity(int capacity)
 {
-    int prev_capacity = this->capacity;
     this->capacity = capacity;
 
-    while(prev_capacity-- > capacity) this->remove(*(this->pLeastRecentNode->pKey));
+    if(this->pLeastRecentNode != nullptr) while(this->map.size() > capacity) this->remove(this->pLeastRecentNode->key);
 }
 
 
-/*
+
 template <class T_KEY, class T_OBJECT>
 void MyDB_LRUCache<T_KEY, T_OBJECT>::printNodes()
 {
+    /*
     MyDB_LRUCacheNode<T_KEY, T_OBJECT> * p = pMostRecentNode;
     while(p != nullptr)
     {
-        cout << "key: " << *(p->pKey) << "; ";
+        if(p->pObject!=nullptr) cout << "key: " << p->key << ", value: " << "object" << "; ";
+        else cout << "key: " << p->key << ", value: " << "null" << "; ";
         p = p->pLessRecentNode;
     }
-    cout << "most recently used: " << "key: " << *(pMostRecentNode->pKey) << "; ";
-    cout << "least recently used: " << "key: " << *(pLeastRecentNode->pKey) << "; ";
+    cout << "most recently used: " << "key: " << pMostRecentNode->key << "; ";
+    cout << "least recently used: " << "key: " << pLeastRecentNode->key << "; ";
     cout << endl;
     
     cout << "size: " << this->map.size() << endl;
+     */
 }
-*/
+
 
 #endif
 

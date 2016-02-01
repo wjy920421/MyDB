@@ -2,10 +2,12 @@
 #ifndef BUFFER_MGR_H
 #define BUFFER_MGR_H
 
+#include <queue>
 #include <string>
 #include "MyDB_PageHandle.h"
 #include "MyDB_Table.h"
 #include "MyDB_LRUCache.h"
+#include "MyDB_BufferManagerDelegate.h"
 
 using namespace std;
 
@@ -49,18 +51,35 @@ public:
 	// and any temporary files need to be deleted
 	~MyDB_BufferManager ();
 
-	// FEEL FREE TO ADD ADDITIONAL PUBLIC METHODS 
+	// FEEL FREE TO ADD ADDITIONAL PUBLIC METHODS
+    
+    void pin (MyDB_PageHandle pinMe);
 
 private:
 
-	MyDB_LRUCache<string, MyDB_Page> * pLRUCache;
+	MyDB_LRUCache<string, MyDB_Page> * pinnedLRUCache;
+
+	MyDB_LRUCache<string, MyDB_Page> * unpinnedLRUCache;
 
 	void ** bufferPool;
+
+	queue<void *> availableBufferPool;
 
 	int pageSize;
 
 	int numPages;
 
+	string tempFile;
+    
+    DelegateUnpin delegateUnpin;
+    
+    DelegateRelease delegateRelease;
+    
+    void doDelegateUnpin(string pageID);
+    
+    void doDelegateRelease(string pageID);
+    
+    void doDelegatePin(string pageID);
 };
 
 #endif
