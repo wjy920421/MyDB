@@ -40,11 +40,13 @@ MyDB_BufferManager::~MyDB_BufferManager ()
     
     while ((page = this->pinnedLRUCache->removeLeastRecent()) != nullptr )
     {
+        page->writeToFile();
         delete page;
     }
     
     while ((page = this->unpinnedLRUCache->removeLeastRecent()) != nullptr )
     {
+        page->writeToFile();
         delete page;
     }
     
