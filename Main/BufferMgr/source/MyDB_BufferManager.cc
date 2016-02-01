@@ -120,16 +120,6 @@ MyDB_PageHandle MyDB_BufferManager::getPinnedPage (MyDB_TablePtr whichTable, lon
     }
     else if(this->pinnedLRUCache->size() < this->numPages)
     {
-        this->pinnedLRUCache->setCapacity(this->pinnedLRUCache->getCapacity() + 1);
-        this->unpinnedLRUCache->setCapacity(this->unpinnedLRUCache->getCapacity() - 1);
-        page = new MyDB_FilePage(this->availableBufferPool.front(), this->pageSize, whichTable, i, true);
-        page->setDelegate(this->bufferManagerDelegate);
-        this->availableBufferPool.pop();
-        this->pinnedLRUCache->set(page->getPageID(), *page);
-        return make_shared<MyDB_PageHandleBase>(page);
-    }
-    else if(this->pinnedLRUCache->size() < this->numPages)
-    {
         if(this->availableBufferPool.empty())
             this->doDelegateRelease(this->unpinnedLRUCache->getLeastRecent()->getPageID());
         
