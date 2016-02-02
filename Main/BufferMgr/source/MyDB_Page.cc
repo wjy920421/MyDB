@@ -31,7 +31,7 @@ void * MyDB_Page::getBytes()
 {
     if(this->evicted)
     {
-        this->bufferManagerDelegate.reload(this->pageID);
+        this->bufferManagerDelegate.reload(this);
         this->loadFromFile();
     }
 

@@ -218,21 +218,21 @@ void MyDB_BufferManager::doDelegateRelease(string pageID)
     
     releasedPage->writeToFile();
     releasedPage->evict();
-    releasedPage->setBuffer(nullptr);
 }
 
 
-void MyDB_BufferManager::doDelegateReload(string pageID)
+void MyDB_BufferManager::doDelegateReload(MyDB_Page * reloadPage)
 {
-    MyDB_Page * reloadPage;
+    string pageID = reloadPage->getPageID();
+    MyDB_Page * existingPage;
     
-    if((reloadPage = this->pinnedLRUCache->get(pageID)) != nullptr)
+    if((existingPage = this->pinnedLRUCache->get(pageID)) != nullptr)
     {
-        reloadPage->loadFromFile();
+        existingPage->loadFromFile();
     }
-    else if((reloadPage = this->unpinnedLRUCache->get(pageID)) != nullptr)
+    else if((existingPage = this->unpinnedLRUCache->get(pageID)) != nullptr)
     {
-        reloadPage->loadFromFile();
+        existingPage->loadFromFile();
     }
     else if(this->unpinnedLRUCache->getCapacity() != 0)
     {
@@ -242,7 +242,7 @@ void MyDB_BufferManager::doDelegateReload(string pageID)
         reloadPage->setBuffer(this->availableBufferPool.front());
         this->availableBufferPool.pop();
         this->unpinnedLRUCache->set(reloadPage->getPageID(), *reloadPage);
-        reloadPage->loadFromFile();
+        reloadPage->reload();
     }
 }
 

@@ -58,7 +58,10 @@ public:
     void setDelegate(BufferManagerDelegate delegate) { this->bufferManagerDelegate = delegate; }
     
     // Evict the page out of buffer
-    void evict() { this->evicted = true; }
+    void evict() { this->evicted = true; this->setBuffer(nullptr); }
+
+    // Reload an evicted page to the buffer;
+    void reload() { this->evicted = false; this->loadFromFile(); }
 
 protected:
 

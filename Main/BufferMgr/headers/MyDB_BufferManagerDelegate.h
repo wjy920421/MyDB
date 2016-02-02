@@ -6,9 +6,11 @@
 
 using namespace std;
 
+class MyDB_Page;
+
 typedef function<void(string)> BufferManagerDelegateUnpin;
 typedef function<void(string)> BufferManagerDelegateRelease;
-typedef function<void(string)> BufferManagerDelegateReload;
+typedef function<void(MyDB_Page *)> BufferManagerDelegateReload;
 
 class BufferManagerDelegate
 {
