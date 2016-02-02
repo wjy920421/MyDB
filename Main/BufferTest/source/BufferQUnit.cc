@@ -38,13 +38,14 @@ int main () {
 
 	QUnit::UnitTest qunit(cerr, QUnit::verbose);
 
+	// UNIT TEST 1
 	{
-		MyDB_BufferManager myMgr (64, 64, "tempDSFSD");
+		MyDB_BufferManager myMgr (64, 16, "tempDSFSD");
 		MyDB_TablePtr table1 = make_shared <MyDB_Table> ("tempTable", "foobar");
 		vector <MyDB_PageHandle> myHandles;
-		for (int i = 0; i < 64; i++) {
+		for (int i = 0; i < 32; i++) {
 			cout << "allocating pinned page\n";
-			MyDB_PageHandle temp = myMgr.getPinnedPage (table1, i);
+			MyDB_PageHandle temp = myMgr.getPage (table1, i);
 			char *bytes = (char *) temp->getBytes ();
 			if (i % 3 == 0)
 				writeNums (bytes, 64, i);
@@ -59,12 +60,13 @@ int main () {
 		//myHandles = temp;
 	}
 
+	// UNIT TEST 2
 	{
-		MyDB_BufferManager myMgr (64, 64, "tempDSFSD");
+		MyDB_BufferManager myMgr (64, 16, "tempDSFSD");
 		MyDB_TablePtr table1 = make_shared <MyDB_Table> ("tempTable", "foobar");
 
 		// look up all of the pages, and make sure they have the correct numbers
-		for (int i = 0; i < 64; i++) {
+		for (int i = 0; i < 32; i++) {
 			MyDB_PageHandle temp = myMgr.getPage (table1, i);
 			char answer[64];
 			if (i % 3 == 0)
@@ -76,6 +78,79 @@ int main () {
 			char *bytes = (char *) temp->getBytes ();
 			QUNIT_IS_EQUAL (string (answer), string (bytes));
 		}
+	}
+
+	// UNIT TEST 3
+	{
+		MyDB_BufferManager myMgr (64, 16, "tempDSFSD");
+		MyDB_TablePtr table1 = make_shared <MyDB_Table> ("tempTable", "foobar");
+		vector <MyDB_PageHandle> myHandles;
+		MyDB_PageHandle page_0, page_16;
+		for (int i = 0; i < 32; i++) {
+			cout << "allocating pinned page\n";
+			if(i == 0) page_0 = myMgr.getPage (table1, 0);
+			else if(i == 16) page_16 = myMgr.getPage (table1, 16);
+			else {
+				MyDB_PageHandle temp = myMgr.getPage (table1, i);
+				myHandles.push_back (temp);
+			}
+		}
+		
+		char answer[64];
+
+		// page 0 should be replace by page 16
+		writeSymbols (answer, 64, 16);
+		cout << "access an in-buffer page\n";
+		QUNIT_IS_EQUAL (string (answer), string ( (char *) page_16->getBytes()));
+
+		// access page 0 again
+		// now page 0 is back to the buffer pool
+		writeNums (answer, 64, 0);
+		cout << "access an out-of-buffer page\n";
+		QUNIT_IS_EQUAL (string (answer), string ( (char *) page_0->getBytes()));
+	}
+
+	// UNIT TEST 4
+	{
+		char answer[64];
+		MyDB_BufferManager myMgr (64, 16, "tempDSFSD");
+		MyDB_TablePtr table1 = make_shared <MyDB_Table> ("tempTable", "foobar");
+		vector <MyDB_PageHandle> myHandles;
+		MyDB_PageHandle page_0, page_16;
+		for (int i = 0; i < 32; i++) {
+			cout << "allocating pinned page\n";
+			
+			MyDB_PageHandle temp = myMgr.getPage ();
+			myHandles.push_back (temp);
+			if(i == 0) page_0 = temp;
+			if(i == 16) page_16 = temp;
+
+			char *bytes = (char *) temp->getBytes ();
+			if (i % 3 == 0)
+				writeNums (bytes, 64, i);
+			else if (i % 3 == 1)
+				writeSymbols (bytes, 64, i);
+			else
+				writeLetters (bytes, 64, i);
+
+			if(i == 0)
+			{
+				// the orginal page 0
+				cout << "the orginal page 0\n";
+				writeNums (answer, 64, 0);
+				QUNIT_IS_EQUAL (string (answer), string ( (char *) page_0->getBytes()));
+			}
+		}
+
+		// page 0 should be replace by page 16
+		writeSymbols (answer, 64, 16);
+		cout << "access an in-buffer page 16\n";
+		QUNIT_IS_EQUAL (string (answer), string ( (char *) page_16->getBytes()));
+
+		// access page 0 again
+		// now page 0 is back to the buffer pool, replacing page 16
+		cout << "access an out-of-buffer page 0\n";
+		QUNIT_IS_EQUAL (string (answer), string ( (char *) page_0->getBytes()));
 	}
 
 	/*
