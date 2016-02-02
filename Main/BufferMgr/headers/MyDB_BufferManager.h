@@ -89,7 +89,7 @@ private:
     void doDelegateRelease(string pageID);
     
     // Reload a specified page
-    void doDelegateReload(string pageID);
+    void doDelegateReload(MyDB_Page * reloadPage);
     
     // Pins a specified page
     void doDelegatePin(string pageID);
