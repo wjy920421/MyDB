@@ -60,6 +60,11 @@ MyDB_BufferManager::~MyDB_BufferManager ()
     free(this->bufferPool);
 }
 
+int MyDB_BufferManager::getPageSize()
+{
+    return this->pageSize;
+}
+
 
 MyDB_PageHandle MyDB_BufferManager::getPage (MyDB_TablePtr whichTable, long i)
 {

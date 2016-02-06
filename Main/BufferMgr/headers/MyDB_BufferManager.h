@@ -11,6 +11,10 @@
 
 using namespace std;
 
+class MyDB_BufferManager;
+
+typedef shared_ptr <MyDB_BufferManager> MyDB_BufferManagerPtr;
+
 class MyDB_BufferManager {
 
 public:
@@ -55,6 +59,9 @@ public:
     
     // Pins the specified page
     void pin (MyDB_PageHandle pinMe);
+
+    // Returns the size of each page
+    int getPageSize();
 
 private:
 
