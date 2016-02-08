@@ -4,7 +4,14 @@
 
 class MyDB_PageRecordIterator : public MyDB_RecordIterator
 {
+public:
+    virtual void getNext ();
 
+    virtual bool hasNext ();
+
+    MyDB_PageRecordIterator () {};
+    
+    virtual ~MyDB_PageRecordIterator () {};
 };
 
 #endif
