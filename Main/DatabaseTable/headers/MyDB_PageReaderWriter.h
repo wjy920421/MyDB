@@ -8,6 +8,7 @@
 class MyDB_PageReaderWriter {
 
 public:
+	MyDB_PageReaderWriter();
 
 	// ANY OTHER METHODS YOU WANT HERE
 
@@ -33,6 +34,8 @@ public:
 	
 private:
 
+	MyDB_PageType pageType;
+	MyDB_Page page;
 	// ANYTHING ELSE YOU WANT HERE
 };
 
