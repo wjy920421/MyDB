@@ -8,35 +8,56 @@
 
 using namespace std;
 
-MyDB_TableReaderWriter :: MyDB_TableReaderWriter (MyDB_TablePtr, MyDB_BufferManagerPtr) {
+
+MyDB_TableReaderWriter::MyDB_TableReaderWriter (MyDB_TablePtr forMe, MyDB_BufferManagerPtr myBuffer)
+{
+    this->bufferManager = myBuffer;
 }
 
-MyDB_PageReaderWriter &MyDB_TableReaderWriter :: operator [] (size_t) {
+
+MyDB_PageReaderWriter & MyDB_TableReaderWriter::operator [] (size_t)
+{
 	static MyDB_PageReaderWriter temp;
 	return temp;	
 }
 
-MyDB_RecordPtr MyDB_TableReaderWriter :: getEmptyRecord () {
+
+MyDB_RecordPtr MyDB_TableReaderWriter::getEmptyRecord ()
+{
 	return nullptr;
 }
 
-MyDB_PageReaderWriter &MyDB_TableReaderWriter :: last () {
+
+MyDB_PageReaderWriter &MyDB_TableReaderWriter::last ()
+{
 	return (*this)[0];
 }
 
 
-void MyDB_TableReaderWriter :: append (MyDB_RecordPtr) {
+void MyDB_TableReaderWriter::append (MyDB_RecordPtr)
+{
+
 }
 
-void MyDB_TableReaderWriter :: loadFromTextFile (string) {
+
+void MyDB_TableReaderWriter::loadFromTextFile (string)
+{
+
 }
 
-MyDB_RecordIteratorPtr MyDB_TableReaderWriter :: getIterator (MyDB_RecordPtr) {
+
+MyDB_RecordIteratorPtr MyDB_TableReaderWriter::getIterator (MyDB_RecordPtr)
+{
 	return nullptr;
 }
 
-void MyDB_TableReaderWriter :: writeIntoTextFile (string) {
+
+void MyDB_TableReaderWriter::writeIntoTextFile (string)
+{
+
 }
 
+
 #endif
+
 
