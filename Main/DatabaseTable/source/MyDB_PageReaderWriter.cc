@@ -6,10 +6,11 @@
 
 
 
-MyDB_PageReaderWriter::MyDB_PageReaderWriter(MyDB_Page* page)
+MyDB_PageReaderWriter::MyDB_PageReaderWriter(MyDB_PageHandle pageHandle, MyDB_SchemaPtr schema)
 {
-    this->page = page;
+    this->pageHandle = pageHandle;
     this->pageType = MyDB_PageType::RegularPage;
+    this->schema = schema;
 }
 
 
