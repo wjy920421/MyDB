@@ -9,7 +9,7 @@
 class MyDB_PageReaderWriter {
 
 public:
-	MyDB_PageReaderWriter();
+	MyDB_PageReaderWriter(MyDB_Page page = null);
 
     // ANY OTHER METHODS YOU WANT HERE
 
@@ -33,7 +33,6 @@ public:
     // sets the type of the page
     void setType (MyDB_PageType toMe);
 
-    MyDB_PageReaderWriter();
 
     ~MyDB_PageReaderWriter();
     

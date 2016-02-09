@@ -6,8 +6,8 @@
 
 
 MyDB_PageReaderWriter :: MyDB_PageReaderWriter(MyDB_Page page){
-	this.page = page;
-	pageType = MyDB_PageType :: RegularPage;
+	this->page = page;
+	this->pageType = MyDB_PageType :: RegularPage;
 }
 
 void MyDB_PageReaderWriter :: clear () {
@@ -15,7 +15,7 @@ void MyDB_PageReaderWriter :: clear () {
 }
 
 MyDB_PageType MyDB_PageReaderWriter :: getType () {
-	return pageType;
+	return this->pageType;
 }
 
 
@@ -26,7 +26,7 @@ MyDB_RecordIteratorPtr MyDB_PageReaderWriter::getIterator (MyDB_RecordPtr)
 
 
 void MyDB_PageReaderWriter :: setType (MyDB_PageType pageType) {
-	this.pageType = pageType;
+	this->pageType = pageType;
 }
 
 
