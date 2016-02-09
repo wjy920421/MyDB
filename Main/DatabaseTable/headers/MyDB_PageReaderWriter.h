@@ -48,6 +48,10 @@ private:
 
     MyDB_SchemaPtr schema;
 
+    MyDB_RecordPtr record;
+
+    void * recordHead;
+
 };
 
 #endif
