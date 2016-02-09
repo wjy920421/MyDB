@@ -3,7 +3,7 @@
 #define PAGE_RW_H
 
 #include "MyDB_PageType.h"
-#include "MyDB_TableReaderWriter.h"
+//#include "MyDB_TableReaderWriter.h"
 #include "MyDB_Page.h"
 
 class MyDB_PageReaderWriter {
@@ -34,7 +34,7 @@ public:
     void setType (MyDB_PageType toMe);
 
 
-    MyDB_PageReaderWriter(MyDB_Page* page);
+    MyDB_PageReaderWriter(MyDB_Page* page = NULL);
 
     ~MyDB_PageReaderWriter();
     

@@ -49,7 +49,7 @@ public:
 
 private:
 
-    MyDB_BufferManager bufferManager;
+    MyDB_BufferManagerPtr bufferManager;
     
 };
 
