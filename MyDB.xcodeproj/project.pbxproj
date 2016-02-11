@@ -6,10 +6,19 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXFileReference section */
+		57B2DC0F1C6D34D1005D7B02 /* Build */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Build; sourceTree = "<group>"; };
+		57B2DC101C6D34D1005D7B02 /* Main */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Main; sourceTree = "<group>"; };
+		57B2DC111C6D37E0005D7B02 /* XcodeBuild */ = {isa = PBXFileReference; lastKnownFileType = folder; path = XcodeBuild; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
 /* Begin PBXGroup section */
 		57B2DC041C6D32F0005D7B02 = {
 			isa = PBXGroup;
 			children = (
+				57B2DC111C6D37E0005D7B02 /* XcodeBuild */,
+				57B2DC0F1C6D34D1005D7B02 /* Build */,
+				57B2DC101C6D34D1005D7B02 /* Main */,
 			);
 			sourceTree = "<group>";
 		};
@@ -22,7 +31,8 @@
 			buildConfigurationList = 57B2DC0C1C6D32F0005D7B02 /* Build configuration list for PBXLegacyTarget "MyDB" */;
 			buildPhases = (
 			);
-			buildToolPath = /usr/local/bin/scons;
+			buildToolPath = "$(PROJECT_DIR)/XcodeBuild/scons-xcode-wrapper.sh";
+			buildWorkingDirectory = "$(PROJECT_DIR)/XcodeBuild/";
 			dependencies = (
 			);
 			name = MyDB;

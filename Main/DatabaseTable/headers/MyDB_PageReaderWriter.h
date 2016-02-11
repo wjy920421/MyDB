@@ -7,6 +7,9 @@
 #include "MyDB_Page.h"
 #include "MyDB_Schema.h"
 #include "MyDB_PageHandle.h"
+#include "MyDB_Record.h"
+#include "MyDB_RecordIterator.h"
+
 
 class MyDB_PageReaderWriter {
 
@@ -34,11 +37,15 @@ public:
 
     // sets the type of the page
     void setType (MyDB_PageType toMe);
-
+    
+    
+    //temp
+    MyDB_PageReaderWriter() {}
+    //temp
 
     MyDB_PageReaderWriter(MyDB_PageHandle pageHandle, MyDB_SchemaPtr schema);
 
-    ~MyDB_PageReaderWriter();
+    ~MyDB_PageReaderWriter() {}
     
 private:
 

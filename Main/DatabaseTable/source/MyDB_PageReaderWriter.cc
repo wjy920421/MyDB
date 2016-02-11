@@ -14,7 +14,7 @@ MyDB_PageReaderWriter::MyDB_PageReaderWriter(MyDB_PageHandle pageHandle, MyDB_Sc
     
     this->record = make_shared <MyDB_Record> (this->schema);
     this->recordHead = this->pageHandle->getBytes();
-    this->recordEnd = this->recordHead + this->record->getBinarySize();
+    //this->recordEnd = this->recordHead + this->record->getBinarySize();
 }
 
 
