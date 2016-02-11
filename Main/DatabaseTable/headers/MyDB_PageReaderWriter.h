@@ -50,6 +50,8 @@ private:
 
     MyDB_RecordPtr record;
 
+    void * recordHead;
+
     void * recordEnd;
 
 };

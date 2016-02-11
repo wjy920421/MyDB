@@ -11,6 +11,10 @@ MyDB_PageReaderWriter::MyDB_PageReaderWriter(MyDB_PageHandle pageHandle, MyDB_Sc
     this->pageHandle = pageHandle;
     this->pageType = MyDB_PageType::RegularPage;
     this->schema = schema;
+    
+    this->record = make_shared <MyDB_Record> (this->schema);
+    this->recordHead = this->pageHandle->getBytes();
+    this->recordEnd = this->recordHead + this->record->getBinarySize();
 }
 
 
