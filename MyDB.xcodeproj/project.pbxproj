@@ -31,7 +31,7 @@
 			buildConfigurationList = 57B2DC0C1C6D32F0005D7B02 /* Build configuration list for PBXLegacyTarget "MyDB" */;
 			buildPhases = (
 			);
-			buildToolPath = "$(PROJECT_DIR)/XcodeBuild/scons-xcode-wrapper.sh";
+			buildToolPath = "$(PROJECT_DIR)/XcodeBuild/build_tool.sh";
 			buildWorkingDirectory = "$(PROJECT_DIR)/XcodeBuild/";
 			dependencies = (
 			);
