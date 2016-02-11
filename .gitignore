@@ -2,5 +2,6 @@ DerivedData/*
 MyDB.xcodeproj/xcuserdata/*
 Build/bin/*
 Build/.sconsign.dblite
+XcodeBuild/bin/*
 *.o
 *.DS_Store
