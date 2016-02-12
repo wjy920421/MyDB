@@ -3,6 +3,8 @@
 #define ANONYMOUS_PAGE_H
 
 #include <string>
+#include <queue>
+#include <unordered_map>
 #include "MyDB_Page.h"
 
 using namespace std;
@@ -34,6 +36,10 @@ private:
     
     // Offset in the temporay file where the page is actually stored
     int fileOffset;
+    
+    // Map of queues of available (unused) offsets
+    static unordered_map<string, queue<int>> availableOffsets;
+    
 };
 
 #endif

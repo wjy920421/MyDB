@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <string>
+#include <stdio.h>
 #include "MyDB_BufferManager.h"
 #include "MyDB_FilePage.h"
 #include "MyDB_AnonymousPage.h"
@@ -58,6 +59,9 @@ MyDB_BufferManager::~MyDB_BufferManager ()
     for(i = 0; i < numPages; i++)
         free(this->bufferPool[i]);
     free(this->bufferPool);
+    
+    // Delete temporary file
+    remove(this->tempFile.c_str());
 }
 
 int MyDB_BufferManager::getPageSize()

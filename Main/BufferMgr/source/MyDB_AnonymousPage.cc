@@ -10,18 +10,34 @@
 
 using namespace std;
 
+unordered_map<string, queue<int>> MyDB_AnonymousPage::availableOffsets;
 
 MyDB_AnonymousPage::MyDB_AnonymousPage(void * address, int size, string tempFile, bool pinned) : MyDB_Page(address, size, pinned)
 {
     this->pageID = this->pageID + "_anonymous_page";
     this->tempFile = tempFile;
     this->fileOffset = -1;
+    
+    if (MyDB_AnonymousPage::availableOffsets.count(this->tempFile) == 0)
+    {
+        MyDB_AnonymousPage::availableOffsets[this->tempFile] = queue<int>();
+    }
+    else if (MyDB_AnonymousPage::availableOffsets[this->tempFile].size() > 0)
+    {
+        this->fileOffset = MyDB_AnonymousPage::availableOffsets[this->tempFile].front();
+        MyDB_AnonymousPage::availableOffsets[this->tempFile].pop();
+    }
 }
 
 
 MyDB_AnonymousPage::~MyDB_AnonymousPage()
 {
     //if(!this->evicted) this->writeToFile();
+    
+    if(this->fileOffset >= 0)
+    {
+        MyDB_AnonymousPage::availableOffsets[this->tempFile].push(this->fileOffset);
+    }
 }
 
 void MyDB_AnonymousPage::release()
