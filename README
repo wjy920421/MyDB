@@ -1,12 +1,21 @@
 Jingyu Wang (jw76)
 
-Jan 31, 2016
 
-Build:
-Go to "Build", and use "SCons" to build the project. The executable file will be built inside "bin". 
+Feb 12, 2016 - Assignment 2 (based on my own code in assignment 1)
+Jan 31, 2016 - Assignment 1
 
-Usage:
+
+BUILD
+=====
+Command Line: Go to "Build", and use "SCons" to build the project. Select a target and continue. The executable file will be built inside "bin". 
+Xcode: Xcode is already configured for this project. Targets will be built under the folder "XcodeBuild". 
+
+
+USAGE
+=====
 Simply run the excutable file, which will go through all unit tests automatically. 
 
-Other:
+
+OTHER
+=====
 Each method or member variable in each class includes a short comment stating what it does. These comments can basically help you understand how the system works. 
