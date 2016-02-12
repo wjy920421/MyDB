@@ -45,6 +45,7 @@ void MyDB_PageReaderWriter::clear ()
 {
     this->setPageHeaderDataSize(0);
     this->pageHandle->wroteBytes();
+    this->pageType = MyDB_PageType::RegularPage;
 }
 
 
