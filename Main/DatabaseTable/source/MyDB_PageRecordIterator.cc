@@ -5,6 +5,19 @@
 #include "MyDB_PageRecordIterator.h"
 
 
+MyDB_PageRecordIterator::MyDB_PageRecordIterator (MyDB_RecordPtr recordPtr, MyDB_PageReaderWriter & pageRW)
+: pageReaderWriter(pageRW)
+{
+    //data = recordPtr->
+}
+
+
+MyDB_PageRecordIterator::~MyDB_PageRecordIterator ()
+{
+
+}
+
+
 void MyDB_PageRecordIterator::getNext ()
 {
 

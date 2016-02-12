@@ -10,6 +10,16 @@
 #include "MyDB_Record.h"
 #include "MyDB_RecordIterator.h"
 
+// class MyDB_PageReaderWriter;
+
+// typedef shared_ptr <MyDB_PageReaderWriter> MyDB_PageReaderWriterPtr;
+
+
+typedef struct MyDB_PageHeader
+{
+    int dataSize;
+    char data[0];
+} MyDB_PageHeader;
 
 class MyDB_PageReaderWriter {
 
@@ -53,13 +63,13 @@ private:
     
     MyDB_PageType pageType;
 
+    MyDB_PageHeader * pageHeader;
+
     MyDB_SchemaPtr schema;
 
-    MyDB_RecordPtr record;
+    void * currentLocation;
 
-    void * recordHead;
-
-    void * recordEnd;
+    int index;
 
 };
 

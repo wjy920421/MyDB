@@ -49,7 +49,9 @@ public:
 
 private:
 
-    MyDB_BufferManagerPtr bufferManager;
+    MyDB_BufferManagerPtr bufferManagerPtr;
+
+    MyDB_TablePtr tablePtr;
     
 };
 

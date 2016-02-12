@@ -11,7 +11,8 @@ using namespace std;
 
 MyDB_TableReaderWriter::MyDB_TableReaderWriter (MyDB_TablePtr forMe, MyDB_BufferManagerPtr myBuffer)
 {
-    this->bufferManager = myBuffer;
+    this->tablePtr = forMe;
+    this->bufferManagerPtr = myBuffer;
 }
 
 
@@ -24,7 +25,7 @@ MyDB_PageReaderWriter & MyDB_TableReaderWriter::operator [] (size_t)
 
 MyDB_RecordPtr MyDB_TableReaderWriter::getEmptyRecord ()
 {
-	return nullptr;
+	return make_shared <MyDB_RecordPtr> (this->tablePtr->getSchema());
 }
 
 

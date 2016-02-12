@@ -43,6 +43,9 @@ public:
 
     // Returns page ID
     string getPageID();
+    
+    // Returns the size of the page
+    size_t getSize() { return page->getSize(); }
 
 private:
 

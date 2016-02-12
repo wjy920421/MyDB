@@ -62,6 +62,9 @@ public:
 
     // Reload an evicted page to the buffer;
     void reload() { this->evicted = false; this->loadFromFile(); }
+    
+    // Returns the size of the page
+    size_t getSize() { return this->pageSize; }
 
 protected:
 
