@@ -154,7 +154,7 @@ int main () {
 
 
 
-
+    /*
 	{
 		// buffer manager and temp page
 		cout << "TEST 1..." << flush;
@@ -549,8 +549,8 @@ int main () {
 		if (temp == string("100 test cases correct")) cout << "CORRECT" << endl << flush;
 		else cout << "***FAIL***" << endl << flush;
 		QUNIT_IS_EQUAL (string("100 test cases correct"), temp);
-	}
-
+     }
+     */
 
 
 
