@@ -5,5 +5,6 @@ Build/bin/*
 Build/.sconsign.dblite
 XcodeBuild/bin/*
 XcodeBuild/.sconsign.dblite
+!XcodeBuild/bin/supplier.tbl
 *.o
 *.DS_Store
