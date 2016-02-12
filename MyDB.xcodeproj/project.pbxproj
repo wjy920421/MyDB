@@ -25,19 +25,33 @@
 /* End PBXGroup section */
 
 /* Begin PBXLegacyTarget section */
-		57B2DC091C6D32F0005D7B02 /* MyDB */ = {
+		57B2DC091C6D32F0005D7B02 /* BufferTest */ = {
 			isa = PBXLegacyTarget;
 			buildArgumentsString = "$(ACTION)";
-			buildConfigurationList = 57B2DC0C1C6D32F0005D7B02 /* Build configuration list for PBXLegacyTarget "MyDB" */;
+			buildConfigurationList = 57B2DC0C1C6D32F0005D7B02 /* Build configuration list for PBXLegacyTarget "BufferTest" */;
 			buildPhases = (
 			);
 			buildToolPath = "$(PROJECT_DIR)/XcodeBuild/build_tool.sh";
 			buildWorkingDirectory = "$(PROJECT_DIR)/XcodeBuild/";
 			dependencies = (
 			);
-			name = MyDB;
+			name = BufferTest;
 			passBuildSettingsInEnvironment = 1;
 			productName = MyDB;
+		};
+		57B2DC121C6E4F03005D7B02 /* RecordTest */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = 57B2DC131C6E4F03005D7B02 /* Build configuration list for PBXLegacyTarget "RecordTest" */;
+			buildPhases = (
+			);
+			buildToolPath = "$(PROJECT_DIR)/XcodeBuild/build_tool.sh";
+			buildWorkingDirectory = "$(PROJECT_DIR)/XcodeBuild/";
+			dependencies = (
+			);
+			name = RecordTest;
+			passBuildSettingsInEnvironment = 1;
+			productName = RecordTest;
 		};
 /* End PBXLegacyTarget section */
 
@@ -49,6 +63,9 @@
 				ORGANIZATIONNAME = wjy;
 				TargetAttributes = {
 					57B2DC091C6D32F0005D7B02 = {
+						CreatedOnToolsVersion = 7.2.1;
+					};
+					57B2DC121C6E4F03005D7B02 = {
 						CreatedOnToolsVersion = 7.2.1;
 					};
 				};
@@ -64,7 +81,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				57B2DC091C6D32F0005D7B02 /* MyDB */,
+				57B2DC091C6D32F0005D7B02 /* BufferTest */,
+				57B2DC121C6E4F03005D7B02 /* RecordTest */,
 			);
 		};
 /* End PBXProject section */
@@ -152,11 +170,34 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = BufferTest;
 			};
 			name = Debug;
 		};
 		57B2DC0E1C6D32F0005D7B02 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = BufferTest;
+			};
+			name = Release;
+		};
+		57B2DC141C6E4F03005D7B02 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUGGING_SYMBOLS = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		57B2DC151C6E4F03005D7B02 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -178,11 +219,19 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		57B2DC0C1C6D32F0005D7B02 /* Build configuration list for PBXLegacyTarget "MyDB" */ = {
+		57B2DC0C1C6D32F0005D7B02 /* Build configuration list for PBXLegacyTarget "BufferTest" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				57B2DC0D1C6D32F0005D7B02 /* Debug */,
 				57B2DC0E1C6D32F0005D7B02 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		57B2DC131C6E4F03005D7B02 /* Build configuration list for PBXLegacyTarget "RecordTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				57B2DC141C6E4F03005D7B02 /* Debug */,
+				57B2DC151C6E4F03005D7B02 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};

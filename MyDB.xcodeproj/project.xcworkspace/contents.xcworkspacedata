@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:MyDB.xcodeproj">
+      location = "self:/Users/wjy/Documents/Rice/COMP 530/MyDB/MyDB.xcodeproj">
    </FileRef>
 </Workspace>
