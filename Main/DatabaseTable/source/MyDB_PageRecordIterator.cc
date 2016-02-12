@@ -12,12 +12,6 @@ MyDB_PageRecordIterator::MyDB_PageRecordIterator (MyDB_RecordPtr recordPtr, MyDB
 }
 
 
-MyDB_PageRecordIterator::~MyDB_PageRecordIterator ()
-{
-
-}
-
-
 void MyDB_PageRecordIterator::getNext ()
 {
     if (this->hasNext())

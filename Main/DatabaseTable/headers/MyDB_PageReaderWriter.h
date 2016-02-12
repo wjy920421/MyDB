@@ -24,7 +24,6 @@ typedef struct MyDB_PageHeader
 class MyDB_PageReaderWriter {
 
 public:
-	
 
     // ANY OTHER METHODS YOU WANT HERE
 
@@ -47,13 +46,8 @@ public:
 
     // sets the type of the page
     void setType (MyDB_PageType toMe);
-    
-    
-    //temp
-    MyDB_PageReaderWriter() {}
-    //temp
 
-    MyDB_PageReaderWriter(MyDB_PageHandle pageHandle);
+    MyDB_PageReaderWriter(MyDB_PageHandle pageHandle, bool clear = false);
 
     ~MyDB_PageReaderWriter() {}
     
@@ -61,15 +55,13 @@ private:
 
     friend class MyDB_PageRecordIterator;
 
-	MyDB_PageHandle pageHandle;
+    MyDB_PageHandle pageHandle;
     
     MyDB_PageType pageType;
 
     MyDB_PageHeader * pageHeader;
 
     char * currentLocation;
-
-    int index;
 
 };
 

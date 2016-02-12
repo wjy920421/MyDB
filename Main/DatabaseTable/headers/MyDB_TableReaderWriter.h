@@ -3,10 +3,12 @@
 #define TABLE_RW_H
 
 #include <memory>
+#include <vector>
 #include "MyDB_BufferManager.h"
+#include "MyDB_Table.h"
 #include "MyDB_Record.h"
 #include "MyDB_RecordIterator.h"
-#include "MyDB_Table.h"
+
 
 // create a smart pointer for the catalog
 using namespace std;
@@ -14,7 +16,7 @@ class MyDB_PageReaderWriter;
 class MyDB_TableReaderWriter;
 typedef shared_ptr <MyDB_TableReaderWriter> MyDB_TableReaderWriterPtr;
 
-class MyDB_TableReaderWriter {
+class MyDB_TableReaderWriter : public enable_shared_from_this<MyDB_TableReaderWriter> {
 
 public:
 
@@ -49,9 +51,13 @@ public:
 
 private:
 
+    friend class MyDB_TableRecordIterator;
+
     MyDB_BufferManagerPtr bufferManagerPtr;
 
     MyDB_TablePtr tablePtr;
+    
+    vector<MyDB_PageReaderWriter> pageVector;
     
 };
 

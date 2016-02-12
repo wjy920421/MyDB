@@ -6,6 +6,7 @@
 #include "MyDB_RecordIterator.h"
 #include "MyDB_PageReaderWriter.h"
 
+
 class MyDB_PageRecordIterator : public MyDB_RecordIterator
 {
 public:
@@ -16,7 +17,7 @@ public:
 
     MyDB_PageRecordIterator (MyDB_RecordPtr record, MyDB_PageReaderWriter & pageRW);
     
-    virtual ~MyDB_PageRecordIterator ();
+    virtual ~MyDB_PageRecordIterator () {}
 
 private:
 

@@ -7,31 +7,35 @@
 
 
 
-MyDB_PageReaderWriter::MyDB_PageReaderWriter(MyDB_PageHandle pageHandle)
+MyDB_PageReaderWriter::MyDB_PageReaderWriter(MyDB_PageHandle pageHandle, bool clear)
 {
     this->pageHandle = pageHandle;
     this->pageType = MyDB_PageType::RegularPage;
-
     this->pageHeader = (MyDB_PageHeader *)this->pageHandle->getBytes();
+    this->currentLocation = this->pageHeader->data;
+
+    if (clear) this->pageHeader->dataSize = 0;
+    //if (clear) this->pageHandle->wroteBytes();
 }
 
 
 
 void MyDB_PageReaderWriter::clear ()
 {
-	this->pageHeader->dataSize = 0;
+    this->pageHeader->dataSize = 0;
+    this->pageHandle->wroteBytes();
 }
 
 
 MyDB_PageType MyDB_PageReaderWriter::getType ()
 {
-	return this->pageType;
+    return this->pageType;
 }
 
 
 MyDB_RecordIteratorPtr MyDB_PageReaderWriter::getIterator (MyDB_RecordPtr record)
 {
-	return make_shared <MyDB_PageRecordIterator> (record, *this);;
+    return make_shared <MyDB_PageRecordIterator> (record, *this);;
 }
 
 
@@ -50,10 +54,11 @@ bool MyDB_PageReaderWriter::append (MyDB_RecordPtr record)
     {
         this->currentLocation = (char *)record->toBinary(this->currentLocation);
         this->pageHeader->dataSize = this->currentLocation - this->pageHeader->data;
+        this->pageHandle->wroteBytes();
         return true;
     }
 
-	return false;
+    return false;
 }
 
 #endif

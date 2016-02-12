@@ -18,16 +18,16 @@ class MyDB_RecordIterator {
 
 public:
 
-	// put the contents of the next record in the file/page into the iterator record
-	// this should be called BEFORE the iterator record is first examined
-	virtual void getNext () = 0;
+    // put the contents of the next record in the file/page into the iterator record
+    // this should be called BEFORE the iterator record is first examined
+    virtual void getNext () = 0;
 
-	// return true iff there is another record in the file/page
-	virtual bool hasNext () = 0;
+    // return true iff there is another record in the file/page
+    virtual bool hasNext () = 0;
 
-	// destructor and contructor
-	MyDB_RecordIterator () {};
-	virtual ~MyDB_RecordIterator () {};
+    // destructor and contructor
+    MyDB_RecordIterator () {};
+    virtual ~MyDB_RecordIterator () {};
 
 };
 
