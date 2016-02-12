@@ -29,6 +29,7 @@ MyDB_TableReaderWriter::MyDB_TableReaderWriter (MyDB_TablePtr tablePtr, MyDB_Buf
     {
         MyDB_PageHandle pageHandle = this->bufferManagerPtr->getPage(this->tablePtr, 0);
         this->pageVector.push_back(MyDB_PageReaderWriter(pageHandle, true));
+        this->tablePtr->setLastPage(0);
     }
 }
 
@@ -74,14 +75,26 @@ void MyDB_TableReaderWriter::loadFromTextFile (string filename)
     if (file.is_open())
     {
         string line;
+        int counter = 0;
         MyDB_RecordPtr recordPtr = this->getEmptyRecord();
-        while (file.good())
+        while (getline(file,line))
         {
-            getline(file,line);
+            counter ++;
             recordPtr->fromString(line);
             this->append(recordPtr);
         }
         file.close();
+        
+        /*
+        int sum = 0;
+        for(int i=0;i<pageVector.size();i++)
+        {
+            cout<<"page "<<i<<": "<<pageVector[i].temp_counter<<endl;
+            sum += pageVector[i].temp_counter;
+        }
+        cout<<"sum: "<<sum<<endl;
+         */
+        
     }
     else 
     {  

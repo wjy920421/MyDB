@@ -25,6 +25,8 @@ private:
 
     MyDB_RecordPtr recordPtr;
 
+    char * currentLocation;
+
 };
 
 #endif

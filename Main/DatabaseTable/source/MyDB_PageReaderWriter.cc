@@ -12,19 +12,38 @@ MyDB_PageReaderWriter::MyDB_PageReaderWriter(MyDB_PageHandle pageHandle, bool cl
     this->pageHandle = pageHandle;
     this->pageType = MyDB_PageType::RegularPage;
     this->pageHeader = (MyDB_PageHeader *)this->pageHandle->getBytes();
-    this->currentLocation = this->pageHeader->data;
     
-    //printf( "current location: %p\n", currentLocation );
-    
-    if (clear) this->pageHeader->dataSize = 0;
+    if (clear) this->setPageHeaderDataSize(0);
     //if (clear) this->pageHandle->wroteBytes();
+    
+    temp_counter = 0;
 }
 
+
+void MyDB_PageReaderWriter::setPageHeaderDataSize(int size)
+{
+    this->pageHeader = (MyDB_PageHeader *)this->pageHandle->getBytes();
+    this->pageHeader->dataSize = size;
+}
+
+
+int MyDB_PageReaderWriter::getPageHeaderDataSize()
+{
+    this->pageHeader = (MyDB_PageHeader *)this->pageHandle->getBytes();
+    return this->pageHeader->dataSize;
+}
+
+
+char * MyDB_PageReaderWriter::getPageHeaderData()
+{
+    this->pageHeader = (MyDB_PageHeader *)this->pageHandle->getBytes();
+    return this->pageHeader->data;
+}
 
 
 void MyDB_PageReaderWriter::clear ()
 {
-    this->pageHeader->dataSize = 0;
+    this->setPageHeaderDataSize(0);
     this->pageHandle->wroteBytes();
 }
 
@@ -50,13 +69,15 @@ void MyDB_PageReaderWriter::setType (MyDB_PageType toMe)
 
 bool MyDB_PageReaderWriter::append (MyDB_RecordPtr record)
 {
-    size_t recordSize = record->getBinarySize();
-    char * newLocation = this->currentLocation + recordSize;
+    char * newLocation = this->getPageHeaderData() + this->getPageHeaderDataSize() + record->getBinarySize();
     if (newLocation <= (char *)this->pageHandle->getBytes() + this->pageHandle->getSize())
     {
-        this->currentLocation = (char *)record->toBinary(this->currentLocation);
-        this->pageHeader->dataSize = this->currentLocation - this->pageHeader->data;
+        char * tail = (char *)record->toBinary(this->getPageHeaderData() + this->getPageHeaderDataSize());
+        this->setPageHeaderDataSize(tail - this->pageHeader->data);
         this->pageHandle->wroteBytes();
+        
+        temp_counter++;
+        
         return true;
     }
 

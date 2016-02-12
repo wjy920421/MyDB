@@ -9,6 +9,7 @@ MyDB_PageRecordIterator::MyDB_PageRecordIterator (MyDB_RecordPtr recordPtr, MyDB
 {
     this->recordPtr = recordPtr;
     this->pageReaderWriterPtr = pageRWPtr;
+    this->currentLocation = this->pageReaderWriterPtr->getPageHeaderData();
 }
 
 
@@ -16,18 +17,16 @@ void MyDB_PageRecordIterator::getNext ()
 {
     if (this->hasNext())
     {
-        this->pageReaderWriterPtr->currentLocation = (char *)this->recordPtr->fromBinary(this->pageReaderWriterPtr->currentLocation);
-        this->pageReaderWriterPtr->pageHeader->dataSize = this->pageReaderWriterPtr->currentLocation - this->pageReaderWriterPtr->pageHeader->data;
+        this->currentLocation = (char *)this->recordPtr->fromBinary(this->currentLocation);
     }
 }
 
 
 bool MyDB_PageRecordIterator::hasNext ()
 {
-    char * currentLocation = this->pageReaderWriterPtr->currentLocation;
-    char * maxLocation = this->pageReaderWriterPtr->pageHeader->data + this->pageReaderWriterPtr->pageHeader->dataSize;
+    char * tail = this->pageReaderWriterPtr->getPageHeaderData() + this->pageReaderWriterPtr->getPageHeaderDataSize();
 
-    if (currentLocation < maxLocation)
+    if (this->currentLocation < tail)
     {
         return true;
     }

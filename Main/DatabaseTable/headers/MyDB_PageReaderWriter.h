@@ -51,6 +51,14 @@ public:
 
     ~MyDB_PageReaderWriter() {}
     
+    int temp_counter;
+    
+    void setPageHeaderDataSize(int size);
+    
+    int getPageHeaderDataSize();
+    
+    char * getPageHeaderData();
+    
 private:
 
     friend class MyDB_PageRecordIterator;
@@ -60,8 +68,6 @@ private:
     MyDB_PageType pageType;
 
     MyDB_PageHeader * pageHeader;
-
-    char * currentLocation;
 
 };
 
