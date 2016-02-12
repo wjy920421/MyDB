@@ -19,6 +19,9 @@ public:
     
     // Write the page to the temporary file
     void writeToFile();
+    
+    // Load the page from the temporary file
+    void loadFromFile();
 
     // Decrease the reference counter by one
     // Called when a page handler is destructed
@@ -28,7 +31,9 @@ private:
 
     // Temporary file to which the anonymous page is mapped
 	string tempFile;
-   
+    
+    // Offset in the temporay file where the page is actually stored
+    int fileOffset;
 };
 
 #endif

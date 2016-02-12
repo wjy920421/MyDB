@@ -15,6 +15,7 @@ MyDB_AnonymousPage::MyDB_AnonymousPage(void * address, int size, string tempFile
 {
     this->pageID = this->pageID + "_anonymous_page";
     this->tempFile = tempFile;
+    this->fileOffset = -1;
 }
 
 
@@ -39,16 +40,55 @@ void MyDB_AnonymousPage::writeToFile()
 {
     if (!this->isPinned() && this->dirty)
     {
-        int fd = open(this->tempFile.c_str(), O_CREAT | O_RDWR | O_APPEND | O_FSYNC, S_IRWXU);
-        if( fd == -1 || write(fd, this->pageAddress, this->pageSize) == -1 )
+        int fd = open(this->tempFile.c_str(), O_CREAT | O_RDWR | O_FSYNC, S_IRWXU);
+        if(fd == -1)
         {
-            fprintf(stderr, "Failed to write page \'%s\' to \'%s\'", this->pageID.c_str(), this->tempFile.c_str());
+            fprintf(stderr, "Failed to open temporary file \'%s\' for \'%s\'", this->tempFile.c_str(), this->pageID.c_str());
             exit(-1);
         }
+        
+        if(this->fileOffset < 0)
+        {
+            this->fileOffset = lseek(fd, 0, SEEK_END);
+        }
+        else
+        {
+            lseek(fd, this->fileOffset, SEEK_SET);
+        }
+        
+        if(write(fd, this->pageAddress, this->pageSize) == -1 )
+        {
+            fprintf(stderr, "Failed to write \'%s\' to \'%s\'", this->pageID.c_str(), this->tempFile.c_str());
+            exit(-1);
+        }
+        
         if(close(fd) == -1)
         {
             fprintf(stderr, "Failed to close \'%s\'", this->tempFile.c_str());
         }
+    }
+}
+
+
+void MyDB_AnonymousPage::loadFromFile()
+{
+    if(this->fileOffset >= 0)
+    {
+        int fd = open(this->tempFile.c_str(), O_CREAT | O_RDWR | O_FSYNC, S_IRWXU);
+        if( fd == -1 )
+        {
+            fprintf(stderr, "Failed to open file");
+        }
+        else if ( lseek(fd, this->fileOffset, SEEK_SET) == -1 )
+        {
+            fprintf(stderr, "Failed to use lseek");
+        }
+        else if ( read(fd, this->pageAddress, pageSize) == -1 )
+        {
+            fprintf(stderr, "Failed to read from file");
+        }
+    
+    close(fd);
     }
 }
 
