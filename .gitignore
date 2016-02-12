@@ -3,5 +3,6 @@ MyDB.xcodeproj/xcuserdata/*
 Build/bin/*
 Build/.sconsign.dblite
 XcodeBuild/bin/*
+XcodeBuild/.sconsign.dblite
 *.o
 *.DS_Store

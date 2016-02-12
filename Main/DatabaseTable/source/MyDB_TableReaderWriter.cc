@@ -25,7 +25,7 @@ MyDB_PageReaderWriter & MyDB_TableReaderWriter::operator [] (size_t)
 
 MyDB_RecordPtr MyDB_TableReaderWriter::getEmptyRecord ()
 {
-	return make_shared <MyDB_RecordPtr> (this->tablePtr->getSchema());
+	return make_shared <MyDB_Record> (this->tablePtr->getSchema());
 }
 
 

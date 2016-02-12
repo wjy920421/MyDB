@@ -2,7 +2,9 @@
 #ifndef PAGE_REC_ITER_H
 #define PAGE_REC_ITER_H
 
+#include "MyDB_Record.h"
 #include "MyDB_RecordIterator.h"
+#include "MyDB_PageReaderWriter.h"
 
 class MyDB_PageRecordIterator : public MyDB_RecordIterator
 {
@@ -20,11 +22,7 @@ private:
 
     MyDB_PageReaderWriter & pageReaderWriter;
 
-    void * data;
-
-    size_t size;
-
-
+    MyDB_RecordPtr recordPtr;
 
 };
 

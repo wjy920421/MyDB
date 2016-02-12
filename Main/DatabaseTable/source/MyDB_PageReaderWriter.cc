@@ -3,14 +3,14 @@
 #define PAGE_RW_C
 
 #include "MyDB_PageReaderWriter.h"
+#include "MyDB_PageRecordIterator.h"
 
 
 
-MyDB_PageReaderWriter::MyDB_PageReaderWriter(MyDB_PageHandle pageHandle, MyDB_SchemaPtr schema)
+MyDB_PageReaderWriter::MyDB_PageReaderWriter(MyDB_PageHandle pageHandle)
 {
     this->pageHandle = pageHandle;
     this->pageType = MyDB_PageType::RegularPage;
-    this->schema = schema;
 
     this->pageHeader = (MyDB_PageHeader *)this->pageHandle->getBytes();
 }
@@ -45,10 +45,11 @@ void MyDB_PageReaderWriter::setType (MyDB_PageType toMe)
 bool MyDB_PageReaderWriter::append (MyDB_RecordPtr record)
 {
     size_t recordSize = record->getBinarySize();
-    void * newLocation = this->currentLocation + recordSize;
-    if (newLocation <= this->pageHandle->getBytes() + this->pageHandle->getSize())
+    char * newLocation = this->currentLocation + recordSize;
+    if (newLocation <= (char *)this->pageHandle->getBytes() + this->pageHandle->getSize())
     {
-        this->currentLocation = record->toBinary(this->currentLocation);
+        this->currentLocation = (char *)record->toBinary(this->currentLocation);
+        this->pageHeader->dataSize = this->currentLocation - this->pageHeader->data;
         return true;
     }
 
