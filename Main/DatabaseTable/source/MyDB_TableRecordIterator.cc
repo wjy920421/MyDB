@@ -6,7 +6,7 @@
 #include "MyDB_PageReaderWriter.h"
 
 
-MyDB_TableRecordIterator::MyDB_TableRecordIterator (MyDB_RecordPtr recordPtr, MyDB_TableReaderWriterPtr tableRWPtr)
+MyDB_TableRecordIterator::MyDB_TableRecordIterator (MyDB_RecordPtr recordPtr, MyDB_TableReaderWriter * tableRWPtr)
 {
     this->recordPtr = recordPtr;
     this->tableReaderWriterPtr = tableRWPtr;

@@ -15,13 +15,13 @@ public:
 
     virtual bool hasNext ();
 
-    MyDB_PageRecordIterator (MyDB_RecordPtr record, MyDB_PageReaderWriter & pageRW);
+    MyDB_PageRecordIterator (MyDB_RecordPtr record, MyDB_PageReaderWriter * pageRWPtr);
     
     virtual ~MyDB_PageRecordIterator () {}
 
 private:
 
-    MyDB_PageReaderWriter & pageReaderWriter;
+    MyDB_PageReaderWriter * pageReaderWriterPtr;
 
     MyDB_RecordPtr recordPtr;
 

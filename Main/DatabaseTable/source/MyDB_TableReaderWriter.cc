@@ -92,7 +92,7 @@ void MyDB_TableReaderWriter::loadFromTextFile (string filename)
 
 MyDB_RecordIteratorPtr MyDB_TableReaderWriter::getIterator (MyDB_RecordPtr recordPtr)
 {
-	return make_shared <MyDB_TableRecordIterator> (recordPtr, shared_from_this());
+	return make_shared <MyDB_TableRecordIterator> (recordPtr, this);
 }
 
 

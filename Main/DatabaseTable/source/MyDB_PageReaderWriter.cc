@@ -13,7 +13,9 @@ MyDB_PageReaderWriter::MyDB_PageReaderWriter(MyDB_PageHandle pageHandle, bool cl
     this->pageType = MyDB_PageType::RegularPage;
     this->pageHeader = (MyDB_PageHeader *)this->pageHandle->getBytes();
     this->currentLocation = this->pageHeader->data;
-
+    
+    //printf( "current location: %p\n", currentLocation );
+    
     if (clear) this->pageHeader->dataSize = 0;
     //if (clear) this->pageHandle->wroteBytes();
 }
@@ -35,7 +37,7 @@ MyDB_PageType MyDB_PageReaderWriter::getType ()
 
 MyDB_RecordIteratorPtr MyDB_PageReaderWriter::getIterator (MyDB_RecordPtr record)
 {
-    return make_shared <MyDB_PageRecordIterator> (record, *this);;
+    return make_shared <MyDB_PageRecordIterator> (record, this);;
 }
 
 

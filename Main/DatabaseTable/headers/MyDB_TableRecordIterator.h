@@ -13,13 +13,13 @@ public:
 
     virtual bool hasNext ();
 
-    MyDB_TableRecordIterator (MyDB_RecordPtr recordPtr, MyDB_TableReaderWriterPtr tableRWPtr);
+    MyDB_TableRecordIterator (MyDB_RecordPtr recordPtr, MyDB_TableReaderWriter * tableRWPtr);
     
     virtual ~MyDB_TableRecordIterator () {};
 
 private:
 
-    MyDB_TableReaderWriterPtr tableReaderWriterPtr;
+    MyDB_TableReaderWriter * tableReaderWriterPtr;
 
     MyDB_RecordPtr recordPtr;
 

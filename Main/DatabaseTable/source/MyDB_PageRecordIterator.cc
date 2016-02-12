@@ -5,10 +5,10 @@
 #include "MyDB_PageRecordIterator.h"
 
 
-MyDB_PageRecordIterator::MyDB_PageRecordIterator (MyDB_RecordPtr recordPtr, MyDB_PageReaderWriter & pageRW)
-: pageReaderWriter(pageRW)
+MyDB_PageRecordIterator::MyDB_PageRecordIterator (MyDB_RecordPtr recordPtr, MyDB_PageReaderWriter * pageRWPtr)
 {
     this->recordPtr = recordPtr;
+    this->pageReaderWriterPtr = pageRWPtr;
 }
 
 
@@ -16,16 +16,16 @@ void MyDB_PageRecordIterator::getNext ()
 {
     if (this->hasNext())
     {
-        this->pageReaderWriter.currentLocation = (char *)this->recordPtr->fromBinary(this->pageReaderWriter.currentLocation);
-        this->pageReaderWriter.pageHeader->dataSize = this->pageReaderWriter.currentLocation - this->pageReaderWriter.pageHeader->data;
+        this->pageReaderWriterPtr->currentLocation = (char *)this->recordPtr->fromBinary(this->pageReaderWriterPtr->currentLocation);
+        this->pageReaderWriterPtr->pageHeader->dataSize = this->pageReaderWriterPtr->currentLocation - this->pageReaderWriterPtr->pageHeader->data;
     }
 }
 
 
 bool MyDB_PageRecordIterator::hasNext ()
 {
-    char * currentLocation = this->pageReaderWriter.currentLocation;
-    char * maxLocation = this->pageReaderWriter.pageHeader->data + this->pageReaderWriter.pageHeader->dataSize;
+    char * currentLocation = this->pageReaderWriterPtr->currentLocation;
+    char * maxLocation = this->pageReaderWriterPtr->pageHeader->data + this->pageReaderWriterPtr->pageHeader->dataSize;
 
     if (currentLocation < maxLocation)
     {

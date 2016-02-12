@@ -1,5 +1,6 @@
 DerivedData/*
 MyDB.xcodeproj/xcuserdata/*
+MyDB.xcodeproj/project.xcworkspace/xcuserdata/*
 Build/bin/*
 Build/.sconsign.dblite
 XcodeBuild/bin/*
