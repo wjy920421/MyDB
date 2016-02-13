@@ -50,13 +50,17 @@ public:
     MyDB_PageReaderWriter &last ();
 
 private:
-
+    
+    // Friends with MyDB_TableRecordIterator
     friend class MyDB_TableRecordIterator;
-
+    
+    // Buffer manager that manages pages in a buffer pool
     MyDB_BufferManagerPtr bufferManagerPtr;
-
+    
+    // Table to be processed
     MyDB_TablePtr tablePtr;
     
+    // Vector of pages
     vector<MyDB_PageReaderWriter> pageVector;
     
 };

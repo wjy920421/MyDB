@@ -12,9 +12,6 @@ MyDB_TableRecordIterator::MyDB_TableRecordIterator (MyDB_RecordPtr recordPtr, My
     this->tableReaderWriterPtr = tableRWPtr;
     this->pageIndex = 0;
     this->pageRecordIterator = (*(this->tableReaderWriterPtr))[0].getIterator(this->recordPtr);
-    
-    temp_counter = 0;
-
 }
 
 void MyDB_TableRecordIterator::getNext ()
@@ -22,17 +19,20 @@ void MyDB_TableRecordIterator::getNext ()
     if (this->pageRecordIterator->hasNext())
     {
         this->pageRecordIterator->getNext();
-        
-        temp_counter++;
     }
-    else if (this->pageIndex + 1 < this->tableReaderWriterPtr->pageVector.size())
+    else
     {
-        //cout<<"page "<<pageIndex<<": "<<temp_counter<<endl;
-        temp_counter = 0;
-        
-        
-        this->pageRecordIterator = (*(this->tableReaderWriterPtr))[++ this->pageIndex].getIterator(this->recordPtr);
-        this->getNext();
+        this->pageIndex++;
+        while (this->pageIndex <= this->tableReaderWriterPtr->tablePtr->lastPage())
+        {
+            if ((*(this->tableReaderWriterPtr))[this->pageIndex].getIterator(this->recordPtr)->hasNext())
+            {
+                this->pageRecordIterator = (*(this->tableReaderWriterPtr))[this->pageIndex].getIterator(this->recordPtr);
+                this->pageRecordIterator->getNext();
+                return;
+            }
+            this->pageIndex++;
+        }
     }
 }
 
@@ -41,12 +41,19 @@ bool MyDB_TableRecordIterator::hasNext ()
 {
     if (! this->pageRecordIterator->hasNext())
     {
-        if (this->pageIndex + 1 >= this->tableReaderWriterPtr->pageVector.size())
+        int next = this->pageIndex + 1;
+        while (next <= this->tableReaderWriterPtr->tablePtr->lastPage())
         {
-            return false;
+            if ((*(this->tableReaderWriterPtr))[next].getIterator(this->recordPtr)->hasNext())
+            {
+                return true;
+            }
+            next++;
         }
+        return false;
     }
     return true;
+    
 }
 
 

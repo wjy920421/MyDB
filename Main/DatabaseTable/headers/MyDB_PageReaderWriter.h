@@ -46,29 +46,33 @@ public:
 
     // sets the type of the page
     void setType (MyDB_PageType toMe);
-
+    
+    // Constructor
     MyDB_PageReaderWriter(MyDB_PageHandle pageHandle, bool clear = false);
-
+    
+    // Destructor
     ~MyDB_PageReaderWriter() {}
     
-    int temp_counter;
-    
+    // Set the data size in page header
     void setPageHeaderDataSize(int size);
     
+    // Set the data size in page header
     int getPageHeaderDataSize();
     
+    // Get data head in page header
     char * getPageHeaderData();
     
 private:
-
+    
+    // Friends with MyDB_PageRecordIterator
     friend class MyDB_PageRecordIterator;
-
+    
+    // Handle to the page in buffer
     MyDB_PageHandle pageHandle;
     
+    // Type of the page
     MyDB_PageType pageType;
-
-    MyDB_PageHeader * pageHeader;
-
+    
 };
 
 #endif

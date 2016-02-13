@@ -11,33 +11,30 @@ MyDB_PageReaderWriter::MyDB_PageReaderWriter(MyDB_PageHandle pageHandle, bool cl
 {
     this->pageHandle = pageHandle;
     this->pageType = MyDB_PageType::RegularPage;
-    this->pageHeader = (MyDB_PageHeader *)this->pageHandle->getBytes();
     
     if (clear) this->setPageHeaderDataSize(0);
     //if (clear) this->pageHandle->wroteBytes();
-    
-    temp_counter = 0;
 }
 
 
 void MyDB_PageReaderWriter::setPageHeaderDataSize(int size)
 {
-    this->pageHeader = (MyDB_PageHeader *)this->pageHandle->getBytes();
-    this->pageHeader->dataSize = size;
+    MyDB_PageHeader * pageHeader = (MyDB_PageHeader *)this->pageHandle->getBytes();
+    pageHeader->dataSize = size;
 }
 
 
 int MyDB_PageReaderWriter::getPageHeaderDataSize()
 {
-    this->pageHeader = (MyDB_PageHeader *)this->pageHandle->getBytes();
-    return this->pageHeader->dataSize;
+    MyDB_PageHeader * pageHeader = (MyDB_PageHeader *)this->pageHandle->getBytes();
+    return pageHeader->dataSize;
 }
 
 
 char * MyDB_PageReaderWriter::getPageHeaderData()
 {
-    this->pageHeader = (MyDB_PageHeader *)this->pageHandle->getBytes();
-    return this->pageHeader->data;
+    MyDB_PageHeader * pageHeader = (MyDB_PageHeader *)this->pageHandle->getBytes();
+    return pageHeader->data;
 }
 
 
@@ -74,10 +71,8 @@ bool MyDB_PageReaderWriter::append (MyDB_RecordPtr record)
     if (newLocation <= (char *)this->pageHandle->getBytes() + this->pageHandle->getSize())
     {
         char * tail = (char *)record->toBinary(this->getPageHeaderData() + this->getPageHeaderDataSize());
-        this->setPageHeaderDataSize(tail - this->pageHeader->data);
+        this->setPageHeaderDataSize(tail - this->getPageHeaderData());
         this->pageHandle->wroteBytes();
-        
-        temp_counter++;
         
         return true;
     }

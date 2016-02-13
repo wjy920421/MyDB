@@ -75,26 +75,13 @@ void MyDB_TableReaderWriter::loadFromTextFile (string filename)
     if (file.is_open())
     {
         string line;
-        int counter = 0;
         MyDB_RecordPtr recordPtr = this->getEmptyRecord();
         while (getline(file,line))
         {
-            counter ++;
             recordPtr->fromString(line);
             this->append(recordPtr);
         }
         file.close();
-        
-        /*
-        int sum = 0;
-        for(int i=0;i<pageVector.size();i++)
-        {
-            cout<<"page "<<i<<": "<<pageVector[i].temp_counter<<endl;
-            sum += pageVector[i].temp_counter;
-        }
-        cout<<"sum: "<<sum<<endl;
-         */
-        
     }
     else 
     {  
@@ -114,20 +101,23 @@ void MyDB_TableReaderWriter::writeIntoTextFile (string filename)
     ofstream file(filename);
     if (file.is_open())
     {
-        ostringstream stream;
         MyDB_RecordPtr recordPtr = this->getEmptyRecord();
         MyDB_RecordIteratorPtr iterator = this->getIterator(recordPtr);
+        int count = 0;
         while (iterator->hasNext())
         {
             iterator->getNext();
+            ostringstream stream;
             stream << recordPtr;
             file << stream.str() << endl;
+            count++;
         }
+        cout << "wrote " << count << " records" << endl;
         file.close();
     }
     else 
     {  
-        fprintf(stderr, "Failed to open \'%s\'", filename.c_str()); 
+        fprintf(stderr, "Failed to write to \'%s\'", filename.c_str()); 
     }
 }
 

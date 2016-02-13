@@ -234,8 +234,73 @@ int main () {
 
 		QUNIT_IS_EQUAL (counter, numCopied);
 		cout << "\n\n\n";
-	}
-
+    }
+    
+    
+    {
+        // load up the table supplier table from the catalog
+        MyDB_CatalogPtr myCatalog = make_shared <MyDB_Catalog> ("catFile");
+        map <string, MyDB_TablePtr> allTables = MyDB_Table :: getAllTables (myCatalog);
+        MyDB_BufferManagerPtr myMgr = make_shared <MyDB_BufferManager> (1024, 16, "tempFile");
+        MyDB_TableReaderWriter supplierTable (allTables["supplier"], myMgr);
+        
+        // Count the total number of records
+        MyDB_RecordPtr temp = supplierTable.getEmptyRecord ();
+        int totalCount = 0;
+        MyDB_RecordIteratorPtr myIter = supplierTable.getIterator (temp);
+        while (myIter->hasNext())
+        {
+            myIter->getNext();
+            totalCount++;
+        }
+        cout << "There are totally " << totalCount << " records\n";
+        
+        // Count the number of records in the last few pages
+        int lastPage = allTables["supplier"]->lastPage();
+        int countOfLast = 0;
+        int countOfLastPages = 0;
+        int num = 20;
+        for (int index = lastPage; index > lastPage - num; index--)
+        {
+            MyDB_RecordIteratorPtr myIter1 = supplierTable[index].getIterator (temp);
+            while (myIter1->hasNext ()) {
+                myIter1->getNext ();
+                countOfLastPages++;
+            }
+            if (index == lastPage)
+            {
+                countOfLast = countOfLastPages;
+                cout << "There are " << countOfLastPages << " records in the last page\n";
+            }
+        }
+        cout << "There are " << countOfLastPages << " records in the last few pages excluding the last page\n";
+        
+        // clear the last few pages except the last page
+        for (int index = lastPage - 1; index > lastPage - num; index--)
+        {
+            supplierTable[index].clear();
+        }
+        
+        // iterate to the last record before the last few pages
+        MyDB_RecordIteratorPtr myIter2 = supplierTable.getIterator (temp);
+        for (int i = 0; i < totalCount - countOfLastPages; i++)
+        {
+            myIter2->getNext();
+        }
+        
+        // the last record has next in the last page
+        bool hasNext = myIter2->hasNext();
+        QUNIT_IS_EQUAL (hasNext, true)
+        
+        // delete the last page
+        supplierTable[lastPage].clear();
+        
+        // last record has no next any more
+        hasNext = myIter2->hasNext();
+        QUNIT_IS_EQUAL (hasNext, false)
+        
+        supplierTable.writeIntoTextFile("output.txt");
+    }
 }
 
 #endif

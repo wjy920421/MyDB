@@ -16,9 +16,6 @@ public:
     MyDB_TableRecordIterator (MyDB_RecordPtr recordPtr, MyDB_TableReaderWriter * tableRWPtr);
     
     virtual ~MyDB_TableRecordIterator () {};
-    
-    int temp_counter;
-
 
 private:
 
@@ -29,6 +26,7 @@ private:
     MyDB_RecordIteratorPtr pageRecordIterator;
 
     int pageIndex;
+    
 };
 
 #endif
