@@ -13,10 +13,14 @@ Export('env', 'debugcflags', 'releasecflags')
 #put all .sconsign files in one place
 env.SConsignFile()
 
-#specify the sconscript for myprogram
+#specify the sconscript for BufferTest
 project = 'BufferTest'
 SConscript('SConstruct' + project, exports=['project'])
 
-#specify the sconscript for myprogram
+#specify the sconscript for RecordTest
 project = 'RecordTest'
+SConscript('SConstruct' + project, exports=['project'])
+
+#specify the sconscript for SortTest
+project = 'SortTest'
 SConscript('SConstruct' + project, exports=['project'])
