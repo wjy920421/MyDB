@@ -140,6 +140,30 @@ vector <MyDB_PageReaderWriter> mergeIntoList (MyDB_BufferManagerPtr parent, MyDB
 void sort (int numPages, MyDB_TableReaderWriter & tableIn, MyDB_TableReaderWriter & tableOut, 
     function <bool ()> comparator, MyDB_RecordPtr lhs, MyDB_RecordPtr rhs)
 {
+    int totalNumPage = tableIn->getNumPages(); //
+
+    for(int i = 0; i < totalNumPage; i++){
+        *tableIn[i].sort(); // 
+    }
+
+    //determent number of chunks
+    int chunks = totalNumPage/(numPages - 1);
+    vector <MyDB_RecordIteratorAltPtr> mergeUs = new vector <MyDB_RecordIteratorAltPtr>();
+    MyDB_BufferManagerPtr BMPtr = new MyDB_BufferManager(); //
+
+    for(int i = 0; i < chunks; i++){
+        MyDB_RecordIteratorAltPtr leftIter = *tableIn[i].getIteratorAlt();
+        int rightIterPos = (i + i + numPages - 1)/2;
+        MyDB_RecordIteratorAltPtr rightIter = *tableIn[i + numPages - 1].getIteratorAlt(); // could you add the get last altptr
+        // in myPageReaderWriter?
+
+        vector <MyDB_PageReaderWriter> chunckPages = mergeIntoList (BMPtr, leftIter, rightIter, comparator, lhs, rhs);
+
+        mergeUs.append(rightIter.advance());
+    }
+    
+
+    mergeIntoFile (&tableOut, &mergeUs, comparator, lhs, rhs);
 
 }
 
