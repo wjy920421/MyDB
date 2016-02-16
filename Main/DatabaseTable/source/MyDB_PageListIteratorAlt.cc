@@ -16,12 +16,13 @@
 #include "MyDB_PageListIteratorAlt.h"
 #include "MyDB_PageRecIteratorAlt.h"
 
-void MyDB_PageListIteratorAlt :: getCurrent (MyDB_RecordPtr intoMe) {
+void MyDB_PageListIteratorAlt::getCurrent (MyDB_RecordPtr intoMe)
+{
 	myIter->getCurrent (intoMe);
 }
 
-bool MyDB_PageListIteratorAlt :: advance () {
-
+bool MyDB_PageListIteratorAlt::advance ()
+{
 	if (myIter->advance ())
 		return true;
 
@@ -29,16 +30,17 @@ bool MyDB_PageListIteratorAlt :: advance () {
 		return false;
 
 	curPage++;
-	myIter = forUs[curPage].getIteratorAlt ();
+	myIter = forUs[curPage].getIteratorAlt();
 	return advance ();
 }
 
-MyDB_PageListIteratorAlt :: MyDB_PageListIteratorAlt (vector <MyDB_PageReaderWriter> &forUsIn) {
+MyDB_PageListIteratorAlt::MyDB_PageListIteratorAlt (vector <MyDB_PageReaderWriter> &forUsIn)
+{
 	forUs = forUsIn;
 	curPage = 0;
-	myIter = forUsIn[curPage].getIteratorAlt ();		
+	myIter = forUsIn[curPage].getIteratorAlt();		
 }
 
-MyDB_PageListIteratorAlt :: ~MyDB_PageListIteratorAlt () {}
+MyDB_PageListIteratorAlt::~MyDB_PageListIteratorAlt () {}
 
 #endif

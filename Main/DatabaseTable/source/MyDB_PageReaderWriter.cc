@@ -90,11 +90,11 @@ MyDB_PageReaderWriterPtr MyDB_PageReaderWriter::sort (function <bool()> comparat
         bytesConsumed += (char *)nextPos - (char *)pos;
     }
 
-    // and now we sort the vector of positions, using the record contents to build a comparator
+    // sort the vector of positions, using the record contents to build a comparator
     RecordComparator myComparator(comparator, lhs, rhs);
     std::sort(positions.begin(), positions.end(), myComparator);
 
-    // and now create the page to return
+    // create an anonymous page to return
     MyDB_PageHandle anonymousPage = this->bufferManagerPtr->getPage();
     MyDB_PageReaderWriterPtr returnVal = make_shared <MyDB_PageReaderWriter> (this->bufferManagerPtr, anonymousPage);
     returnVal->clear();

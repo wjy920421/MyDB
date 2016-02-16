@@ -154,7 +154,7 @@ int main () {
 
 
 
-    /*
+
 	{
 		// buffer manager and temp page
 		cout << "TEST 1..." << flush;
@@ -259,16 +259,16 @@ int main () {
 		cout << "TEST 5..." << flush;
 		{
 			cout << "create manager..." << flush;
-			MyDB_BufferManager myMgr(64, 100000, "tempDSFSD");
+			MyDB_BufferManager myMgr(64, 20000, "tempDSFSD");
 			cout << "get page..." << flush;
 			MyDB_TablePtr table1 = make_shared <MyDB_Table>("table1", "file1");
-			vector<MyDB_PageHandle> pages(100000);
-			for (int i = 0; i < 100000; i++) {
+			vector<MyDB_PageHandle> pages(20000);
+			for (int i = 0; i < 20000; i++) {
 				pages[i] = myMgr.getPage(table1, i);
 			}
 			cout << "get bytes..." << flush;
-			vector<char*> bytes(100000);
-			for (int i = 0; i < 100000; i++) {
+			vector<char*> bytes(20000);
+			for (int i = 0; i < 20000; i++) {
 				bytes[i] = (char *)pages[i]->getBytes();
 			}
 			cout << "shutdown manager..." << flush;
@@ -296,12 +296,12 @@ int main () {
 			clock_t t1, t2, t3;
 			volatile char *bytes1, *bytes2;
 			t1 = clock(); 
-			for (int i = 0; i < 100000; i++) {
+			for (int i = 0; i < 20000; i++) {
 				bytes1 = (char *)pages[13]->getBytes();
 				bytes2 = (char *)pages[14]->getBytes();
 			}
 			t2 = clock();
-			for (int i = 0; i < 100000; i++) {
+			for (int i = 0; i < 20000; i++) {
 				bytes1 = (char *)pages[15]->getBytes();
 				bytes2 = (char *)pages[16]->getBytes();
 			}
@@ -329,13 +329,13 @@ int main () {
 			clock_t t1, t2, t3;
 			volatile char *bytes1;
 			t1 = clock(); 
-			for (int i = 0; i < 1000; i++) {
+			for (int i = 0; i < 200; i++) {
 				for (int j = 0; j < 100; j++) {
 					bytes1 = (char *)pages[j]->getBytes();
 				}
 			}
 			t2 = clock();
-			for (int i = 0; i < 1000; i++) {
+			for (int i = 0; i < 200; i++) {
 				for (int j = 0; j < 101; j++) {
 					bytes1 = (char *)pages[j]->getBytes();
 				}
@@ -550,7 +550,6 @@ int main () {
 		else cout << "***FAIL***" << endl << flush;
 		QUNIT_IS_EQUAL (string("100 test cases correct"), temp);
      }
-     */
 
 
 

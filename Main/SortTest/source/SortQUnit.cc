@@ -17,38 +17,38 @@
 
 int main () {
 
-	QUnit::UnitTest qunit(cerr, QUnit::verbose);
+    QUnit::UnitTest qunit(cerr, QUnit::verbose);
 
-	{
+    {
 
-		// create a catalog
-		MyDB_CatalogPtr myCatalog = make_shared <MyDB_Catalog> ("catFile");
+        // create a catalog
+        MyDB_CatalogPtr myCatalog = make_shared <MyDB_Catalog> ("catFile");
 
-		// now make a schema
-		MyDB_SchemaPtr mySchema = make_shared <MyDB_Schema> ();
-		mySchema->appendAtt (make_pair ("suppkey", make_shared <MyDB_IntAttType> ()));
-		mySchema->appendAtt (make_pair ("name", make_shared <MyDB_StringAttType> ()));
-		mySchema->appendAtt (make_pair ("address", make_shared <MyDB_StringAttType> ()));
-		mySchema->appendAtt (make_pair ("nationkey", make_shared <MyDB_IntAttType> ()));
-		mySchema->appendAtt (make_pair ("phone", make_shared <MyDB_StringAttType> ()));
-		mySchema->appendAtt (make_pair ("acctbal", make_shared <MyDB_DoubleAttType> ()));
-		mySchema->appendAtt (make_pair ("comment", make_shared <MyDB_StringAttType> ()));
+        // now make a schema
+        MyDB_SchemaPtr mySchema = make_shared <MyDB_Schema> ();
+        mySchema->appendAtt (make_pair ("suppkey", make_shared <MyDB_IntAttType> ()));
+        mySchema->appendAtt (make_pair ("name", make_shared <MyDB_StringAttType> ()));
+        mySchema->appendAtt (make_pair ("address", make_shared <MyDB_StringAttType> ()));
+        mySchema->appendAtt (make_pair ("nationkey", make_shared <MyDB_IntAttType> ()));
+        mySchema->appendAtt (make_pair ("phone", make_shared <MyDB_StringAttType> ()));
+        mySchema->appendAtt (make_pair ("acctbal", make_shared <MyDB_DoubleAttType> ()));
+        mySchema->appendAtt (make_pair ("comment", make_shared <MyDB_StringAttType> ()));
 
-		// use the schema to create a table
-		MyDB_TablePtr myTable = make_shared <MyDB_Table> ("supplier", "supplier.bin", mySchema);
-		MyDB_BufferManagerPtr myMgr = make_shared <MyDB_BufferManager> (131072, 128, "tempFile");
-		MyDB_TableReaderWriter supplierTable (myTable, myMgr);
+        // use the schema to create a table
+        MyDB_TablePtr myTable = make_shared <MyDB_Table> ("supplier", "supplier.bin", mySchema);
+        MyDB_BufferManagerPtr myMgr = make_shared <MyDB_BufferManager> (131072, 128, "tempFile");
+        MyDB_TableReaderWriter supplierTable (myTable, myMgr);
 
-		// load it from a text file
-		supplierTable.loadFromTextFile ("supplierBig.tbl");
+        // load it from a text file
+        supplierTable.loadFromTextFile ("supplierBig.tbl");
 
-		// put the supplier table into the catalog
-		myTable->putInCatalog (myCatalog);
-	}
+        // put the supplier table into the catalog
+        myTable->putInCatalog (myCatalog);
+    }
 
-	{
-		// use the alternative iterator on the file
-	        // load up the table supplier table from the catalog
+    {
+        // use the alternative iterator on the file
+            // load up the table supplier table from the catalog
                 MyDB_CatalogPtr myCatalog = make_shared <MyDB_Catalog> ("catFile");
                 map <string, MyDB_TablePtr> allTables = MyDB_Table :: getAllTables (myCatalog);
                 MyDB_BufferManagerPtr myMgr = make_shared <MyDB_BufferManager> (131072, 128, "tempFile");
@@ -66,12 +66,12 @@ int main () {
                 }
                 QUNIT_IS_EQUAL (counter, 320000);
 
-		vector <MyDB_PageReaderWriter> allPages;
-		for (int i = 0; i < supplierTable.getNumPages (); i++) {
-			allPages.push_back (supplierTable[i]);	
-		}
+        vector <MyDB_PageReaderWriter> allPages;
+        for (int i = 0; i < supplierTable.getNumPages (); i++) {
+            allPages.push_back (supplierTable[i]);    
+        }
 
-		myIter = getIteratorAlt (allPages);
+        myIter = getIteratorAlt (allPages);
                 counter = 0;
                 while (myIter->advance ()) {
                         myIter->getCurrent (temp);
@@ -79,58 +79,58 @@ int main () {
                 }
                 QUNIT_IS_EQUAL (counter, 320000);
 
-	}
+    }
 
-	{
+    {
 
-		// load up the table supplier table from the catalog
-		MyDB_CatalogPtr myCatalog = make_shared <MyDB_Catalog> ("catFile");
-		map <string, MyDB_TablePtr> allTables = MyDB_Table :: getAllTables (myCatalog);
-		MyDB_BufferManagerPtr myMgr = make_shared <MyDB_BufferManager> (131072, 128, "tempFile");
-		MyDB_TableReaderWriter supplierTable (allTables["supplier"], myMgr);
+        // load up the table supplier table from the catalog
+        MyDB_CatalogPtr myCatalog = make_shared <MyDB_Catalog> ("catFile");
+        map <string, MyDB_TablePtr> allTables = MyDB_Table :: getAllTables (myCatalog);
+        MyDB_BufferManagerPtr myMgr = make_shared <MyDB_BufferManager> (131072, 128, "tempFile");
+        MyDB_TableReaderWriter supplierTable (allTables["supplier"], myMgr);
 
-		// now, go to the 37th page and iterate over it
-		MyDB_RecordPtr temp = supplierTable.getEmptyRecord ();
-		MyDB_RecordIteratorPtr myIter = supplierTable[36].getIterator (temp);
-		while (myIter->hasNext ()) {
-			myIter->getNext ();
-		}
+        // now, go to the 37th page and iterate over it
+        MyDB_RecordPtr temp = supplierTable.getEmptyRecord ();
+        MyDB_RecordIteratorPtr myIter = supplierTable[36].getIterator (temp);
+        while (myIter->hasNext ()) {
+            myIter->getNext ();
+        }
 
 
-		// sort the contents of the page
-		MyDB_RecordPtr temp2 = supplierTable.getEmptyRecord ();
-		function <bool ()> myComp = buildRecordComparator (temp, temp2, "[acctbal]");
-		MyDB_PageReaderWriterPtr sorted = supplierTable[36].sort (myComp, temp, temp2);
+        // sort the contents of the page
+        MyDB_RecordPtr temp2 = supplierTable.getEmptyRecord ();
+        function <bool ()> myComp = buildRecordComparator (temp, temp2, "[acctbal]");
+        MyDB_PageReaderWriterPtr sorted = supplierTable[36].sort (myComp, temp, temp2);
 
-		// now, iterate again
-		myIter = sorted->getIterator (temp);
-		while (myIter->hasNext ()) {
-			myIter->getNext ();
-		}
+        // now, iterate again
+        myIter = sorted->getIterator (temp);
+        while (myIter->hasNext ()) {
+            myIter->getNext ();
+        }
 
-	}
+    }
 
-	{
-		// load up the table supplier table from the catalog
-		MyDB_CatalogPtr myCatalog = make_shared <MyDB_Catalog> ("catFile");
-		map <string, MyDB_TablePtr> allTables = MyDB_Table :: getAllTables (myCatalog);
-		MyDB_BufferManagerPtr myMgr = make_shared <MyDB_BufferManager> (131072, 128, "tempFile");
-		MyDB_TableReaderWriter supplierTable (allTables["supplier"], myMgr);
+    {
+        // load up the table supplier table from the catalog
+        MyDB_CatalogPtr myCatalog = make_shared <MyDB_Catalog> ("catFile");
+        map <string, MyDB_TablePtr> allTables = MyDB_Table :: getAllTables (myCatalog);
+        MyDB_BufferManagerPtr myMgr = make_shared <MyDB_BufferManager> (131072, 128, "tempFile");
+        MyDB_TableReaderWriter supplierTable (allTables["supplier"], myMgr);
 
-		// use the schema to create a table
-		MyDB_TablePtr outTable = make_shared <MyDB_Table> ("supplierSorted", 
-			"supplierSorted.bin", allTables["supplier"]->getSchema ());
-		MyDB_TableReaderWriter outputTable (outTable, myMgr);
+        // use the schema to create a table
+        MyDB_TablePtr outTable = make_shared <MyDB_Table> ("supplierSorted", 
+            "supplierSorted.bin", allTables["supplier"]->getSchema ());
+        MyDB_TableReaderWriter outputTable (outTable, myMgr);
 
-		// get two empty records
-		MyDB_RecordPtr rec1 = supplierTable.getEmptyRecord ();
-		MyDB_RecordPtr rec2 = supplierTable.getEmptyRecord ();
+        // get two empty records
+        MyDB_RecordPtr rec1 = supplierTable.getEmptyRecord ();
+        MyDB_RecordPtr rec2 = supplierTable.getEmptyRecord ();
 
-		// and get a comparator
-		function <bool ()> myComp = buildRecordComparator (rec1, rec2, "[acctbal]");
+        // and get a comparator
+        function <bool ()> myComp = buildRecordComparator (rec1, rec2, "[acctbal]");
 
-		// and sort
-		sort (64, supplierTable, outputTable, myComp, rec1, rec2);
+        // and sort
+        sort (64, supplierTable, outputTable, myComp, rec1, rec2);
 
                 MyDB_RecordIteratorAltPtr myIter = outputTable.getIteratorAlt ();
 
@@ -142,51 +142,62 @@ int main () {
                 }
                 QUNIT_IS_EQUAL (counter, 320000);
 
-		// put the supplier table into the catalog
-		outTable->putInCatalog (myCatalog);
-	}
+        // put the supplier table into the catalog
+        outTable->putInCatalog (myCatalog);
+    }
 
-	{
+    {
 
-		// load up the two tables from the catalog
-		MyDB_CatalogPtr myCatalog = make_shared <MyDB_Catalog> ("catFile");
-		map <string, MyDB_TablePtr> allTables = MyDB_Table :: getAllTables (myCatalog);
-		MyDB_BufferManagerPtr myMgr = make_shared <MyDB_BufferManager> (131072, 128, "tempFile");
-		MyDB_TableReaderWriter sortedTable (allTables["supplierSorted"], myMgr);
-		MyDB_TableReaderWriter otherSortedTable (allTables["supplier"], myMgr);
+        // load up the two tables from the catalog
+        MyDB_CatalogPtr myCatalog = make_shared <MyDB_Catalog> ("catFile");
+        map <string, MyDB_TablePtr> allTables = MyDB_Table :: getAllTables (myCatalog);
+        MyDB_BufferManagerPtr myMgr = make_shared <MyDB_BufferManager> (131072, 128, "tempFile");
+        MyDB_TableReaderWriter sortedTable (allTables["supplierSorted"], myMgr);
+        MyDB_TableReaderWriter otherSortedTable (allTables["supplier"], myMgr);
 
-		// load up the sorted text file
-		otherSortedTable.loadFromTextFile ("supplierBigSorted.tbl");
+        // load up the sorted text file
+        otherSortedTable.loadFromTextFile ("supplierBigSorted.tbl");
 
-		// get two empty records
-		MyDB_RecordPtr rec1 = sortedTable.getEmptyRecord ();
-		MyDB_RecordPtr rec2 = otherSortedTable.getEmptyRecord ();
+        // get two empty records
+        MyDB_RecordPtr rec1 = sortedTable.getEmptyRecord ();
+        MyDB_RecordPtr rec2 = otherSortedTable.getEmptyRecord ();
 
-		// get two iterators
-                MyDB_RecordIteratorAltPtr myIterOne = sortedTable.getIteratorAlt ();
-                MyDB_RecordIteratorAltPtr myIterTwo = otherSortedTable.getIteratorAlt ();
+        // get two iterators
+        MyDB_RecordIteratorAltPtr myIterOne = sortedTable.getIteratorAlt ();
+        MyDB_RecordIteratorAltPtr myIterTwo = otherSortedTable.getIteratorAlt ();
 
-		// make sure the results are the same
-		int matches = 0;
-                while (myIterOne->advance ()) {
-			myIterTwo->advance ();
+        // make sure the results are the same
+        
+//        int count = 0;
+        
+        int matches = 0;
+        while (myIterOne->advance ())
+        {
+            myIterTwo->advance ();
 
-			// get the two records
-                        myIterOne->getCurrent (rec1);
-                        myIterTwo->getCurrent (rec2);
-			stringstream ss1;
-			stringstream ss2;
+            // get the two records
+            myIterOne->getCurrent (rec1);
+            myIterTwo->getCurrent (rec2);
+            stringstream ss1;
+            stringstream ss2;
 
-			// convert to strings and make sure they match
-			ss1 << rec1;
-			ss2 << rec2;
-			string string1 = ss1.str (), string2 = ss2.str ();
-			if (string1 == string2)
-				matches++;
-                }
+            // convert to strings and make sure they match
+            ss1 << rec1;
+            ss2 << rec2;
+            string string1 = ss1.str (), string2 = ss2.str ();
+            if (string1 == string2)
+                matches++;
+//            else
+//            {
+//                cout << "mismatch at" << count << endl;
+//                cout << string1 << endl;
+//                cout << string2 << endl;
+//            }
+//            count++;
+        }
 
-                QUNIT_IS_EQUAL (matches, 320000);
-	}
+        QUNIT_IS_EQUAL (matches, 320000);
+    }
 }
 
 #endif
