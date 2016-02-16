@@ -48,7 +48,7 @@ What do you want to build/clean?\n
 3. Sort unit tests
 4. Buffer unit tests for Clear (use clang++ compiler)
 5. Record unit tests for Clear (use clang++ compiler)
-5. Sort unit tests for Clear (use clang++ compiler)
+6. Sort unit tests for Clear (use clang++ compiler)
 """)
 
 # ans=raw_input("Select the module(s) you want to build or clean. ")

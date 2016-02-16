@@ -18,11 +18,6 @@ typedef shared_ptr <MyDB_Record> MyDB_RecordPtr;
 // a lambda function over the record... computes an attribute value
 typedef function <MyDB_AttValPtr ()> func;
 
-// a container for a database record... the way that this is typically used is that
-// a MyDB_Record is created for a particualr table.  Then the record is used along
-// with one of the ReaderWriter classes to access or to change the contents of the
-// talbe
-
 class MyDB_Record {
 
 public:
@@ -94,6 +89,15 @@ public:
 	//
 	func compileComputation (string fromMe);
 
+	// builds a function that returns true if lhs < rhs; the comparison is done by running whatever computation is 
+	// encoded by the string "computation" on both lhs and rhs, and then compariing the results obtained using this
+	// computation over both.  If the result from lhs is < the result from rhs, then the function returned from
+	// buildRecordComparator returns a true; otherwise, it returns a false
+	//
+	// Note that the encoding of the computation in the string "computation" is exactly the same as the encoding
+	// used by the method compileComputation above
+	friend function <bool ()> buildRecordComparator (MyDB_RecordPtr lhs,  MyDB_RecordPtr rhs, string computation);
+
 private:
 	// helper function for the compilation
 	pair <func, MyDB_AttTypePtr> compileHelper (char * &vals);
@@ -118,13 +122,8 @@ private:
 
 private:
 
-	// the schema for the record
 	MyDB_SchemaPtr mySchema;
-
-	// the actual values in this database record
 	vector <MyDB_AttValPtr> values;	
-
-	// stores pointers to all of the intermediate values created during function evaluation
 	vector <MyDB_AttValPtr> scratch;
 
 };

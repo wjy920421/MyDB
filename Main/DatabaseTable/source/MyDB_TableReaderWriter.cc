@@ -7,7 +7,8 @@
 #include "MyDB_PageHandle.h"
 #include "MyDB_PageReaderWriter.h"
 #include "MyDB_TableReaderWriter.h"
-#include "MyDB_TableRecordIterator.h"
+#include "MyDB_TableRecIterator.h"
+#include "MyDB_TableRecIteratorAlt.h"
 
 using namespace std;
 
@@ -92,7 +93,31 @@ void MyDB_TableReaderWriter::loadFromTextFile (string filename)
 
 MyDB_RecordIteratorPtr MyDB_TableReaderWriter::getIterator (MyDB_RecordPtr recordPtr)
 {
-	return make_shared <MyDB_TableRecordIterator> (recordPtr, this);
+    return make_shared <MyDB_TableRecIterator> (recordPtr, this);
+}
+
+
+MyDB_RecordIteratorAltPtr MyDB_TableReaderWriter::getIteratorAlt ()
+{
+    return make_shared <MyDB_TableRecIteratorAlt> (*this, this->tablePtr);
+}
+
+
+MyDB_RecordIteratorAltPtr MyDB_TableReaderWriter::getIteratorAlt (int lowPage, int highPage)
+{
+    return make_shared <MyDB_TableRecIteratorAlt> (*this, this->tablePtr, lowPage, highPage);
+}
+
+
+MyDB_BufferManagerPtr MyDB_TableReaderWriter::getBufferMgr ()
+{
+    return this->bufferManagerPtr;
+}
+
+
+int MyDB_TableReaderWriter::getNumPages ()
+{
+    return this->tablePtr->lastPage() + 1;
 }
 
 

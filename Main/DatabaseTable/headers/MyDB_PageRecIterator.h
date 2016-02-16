@@ -7,7 +7,7 @@
 #include "MyDB_PageReaderWriter.h"
 
 
-class MyDB_PageRecordIterator : public MyDB_RecordIterator
+class MyDB_PageRecIterator : public MyDB_RecordIterator
 {
 public:
 
@@ -15,9 +15,9 @@ public:
 
     virtual bool hasNext ();
 
-    MyDB_PageRecordIterator (MyDB_RecordPtr record, MyDB_PageReaderWriter * pageRWPtr);
+    MyDB_PageRecIterator (MyDB_RecordPtr record, MyDB_PageReaderWriter * pageRWPtr);
     
-    virtual ~MyDB_PageRecordIterator () {}
+    virtual ~MyDB_PageRecIterator () {}
 
 private:
 

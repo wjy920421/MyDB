@@ -786,8 +786,22 @@ std::ostream& operator<<(std::ostream& os, const MyDB_RecordPtr printMe) {
 		os << temp->toString () << "|";
 	}
 	return os;
+}
 
+function <bool ()> buildRecordComparator (MyDB_RecordPtr lhs,  MyDB_RecordPtr rhs, string computation) {
 
+	// compile a computation over the LHS and over the RHS
+	char *str = (char *) computation.c_str ();
+	pair <func, MyDB_AttTypePtr> lhsFunc = lhs->compileHelper (str);
+
+	str = (char *) computation.c_str ();
+	pair <func, MyDB_AttTypePtr> rhsFunc = rhs->compileHelper (str);
+
+	// and then build a lambda that performs the computatation
+	auto res = lhs->lt (lhsFunc, rhsFunc);
+	func temp = res.first;
+	return [=] {return temp ()->toBool ();};
+	
 }
 
 MyDB_Record :: MyDB_Record (MyDB_SchemaPtr mySchemaIn) {

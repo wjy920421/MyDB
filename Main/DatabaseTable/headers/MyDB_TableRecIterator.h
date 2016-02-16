@@ -6,16 +6,16 @@
 #include "MyDB_RecordIterator.h"
 #include "MyDB_TableReaderWriter.h"
 
-class MyDB_TableRecordIterator : public MyDB_RecordIterator
+class MyDB_TableRecIterator : public MyDB_RecordIterator
 {
 public:
     virtual void getNext ();
 
     virtual bool hasNext ();
 
-    MyDB_TableRecordIterator (MyDB_RecordPtr recordPtr, MyDB_TableReaderWriter * tableRWPtr);
+    MyDB_TableRecIterator (MyDB_RecordPtr recordPtr, MyDB_TableReaderWriter * tableRWPtr);
     
-    virtual ~MyDB_TableRecordIterator () {};
+    virtual ~MyDB_TableRecIterator () {};
 
 private:
 

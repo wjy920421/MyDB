@@ -2,23 +2,17 @@
 #ifndef PAGE_RW_H
 #define PAGE_RW_H
 
-#include "MyDB_PageType.h"
 #include "MyDB_Page.h"
 #include "MyDB_Schema.h"
 #include "MyDB_PageHandle.h"
 #include "MyDB_Record.h"
 #include "MyDB_RecordIterator.h"
-
-// class MyDB_PageReaderWriter;
-
-// typedef shared_ptr <MyDB_PageReaderWriter> MyDB_PageReaderWriterPtr;
+#include "MyDB_RecordIteratorAlt.h"
+#include "MyDB_PageHeader.h"
 
 
-typedef struct MyDB_PageHeader
-{
-    int dataSize;
-    char data[0];
-} MyDB_PageHeader;
+class MyDB_PageReaderWriter;
+typedef shared_ptr <MyDB_PageReaderWriter> MyDB_PageReaderWriterPtr;
 
 
 class MyDB_PageReaderWriter {
@@ -36,6 +30,13 @@ public:
     // by iterateIntoMe
     MyDB_RecordIteratorPtr getIterator (MyDB_RecordPtr iterateIntoMe);
 
+    // gets an instance of an alternate iterator over the page... this is an
+    // iterator that has the alternate getCurrent ()/advance () interface
+    MyDB_RecordIteratorAltPtr getIteratorAlt ();
+
+    // gets an instance of an alternatie iterator over a list of pages
+    friend MyDB_RecordIteratorAltPtr getIteratorAlt (vector <MyDB_PageReaderWriter> &forUs);
+
     // appends a record to this page... return false is the append fails because
     // there is not enough space on the page; otherwise, return true
     bool append (MyDB_RecordPtr appendMe);
@@ -52,26 +53,23 @@ public:
     
     // Destructor
     ~MyDB_PageReaderWriter() {}
-    
-    // Set the data size in page header
-    void setPageHeaderDataSize(int size);
-    
-    // Set the data size in page header
-    int getPageHeaderDataSize();
-    
-    // Get data head in page header
-    char * getPageHeaderData();
+
+    // sorts the contents of the page... the boolean lambda that is sent into
+    // this function must check to see if the contents of the record pointed to
+    // by lhs are less than the contens of the record pointed to by rhs... typically,
+    // this lambda would have been created via a call to buildRecordComparator
+    MyDB_PageReaderWriterPtr sort (function <bool ()> comparator, MyDB_RecordPtr lhs,  MyDB_RecordPtr rhs);
     
 private:
     
-    // Friends with MyDB_PageRecordIterator
-    friend class MyDB_PageRecordIterator;
+    // Friends with MyDB_PageRecIterator
+    friend class MyDB_PageRecIterator;
     
     // Handle to the page in buffer
     MyDB_PageHandle pageHandle;
     
-    // Type of the page
-    MyDB_PageType pageType;
+    // Header of the page
+    MyDB_PageHeaderPtr pageHeader;
     
 };
 

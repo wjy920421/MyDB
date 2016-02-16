@@ -2,11 +2,11 @@
 #ifndef TABLE_REC_ITER_C
 #define TABLE_REC_ITER_C
 
-#include "MyDB_TableRecordIterator.h"
+#include "MyDB_TableRecIterator.h"
 #include "MyDB_PageReaderWriter.h"
 
 
-MyDB_TableRecordIterator::MyDB_TableRecordIterator (MyDB_RecordPtr recordPtr, MyDB_TableReaderWriter * tableRWPtr)
+MyDB_TableRecIterator::MyDB_TableRecIterator (MyDB_RecordPtr recordPtr, MyDB_TableReaderWriter * tableRWPtr)
 {
     this->recordPtr = recordPtr;
     this->tableReaderWriterPtr = tableRWPtr;
@@ -14,7 +14,7 @@ MyDB_TableRecordIterator::MyDB_TableRecordIterator (MyDB_RecordPtr recordPtr, My
     this->pageRecordIterator = (*(this->tableReaderWriterPtr))[0].getIterator(this->recordPtr);
 }
 
-void MyDB_TableRecordIterator::getNext ()
+void MyDB_TableRecIterator::getNext ()
 {
     if (this->pageRecordIterator->hasNext())
     {
@@ -37,7 +37,7 @@ void MyDB_TableRecordIterator::getNext ()
 }
 
 
-bool MyDB_TableRecordIterator::hasNext ()
+bool MyDB_TableRecIterator::hasNext ()
 {
     if (! this->pageRecordIterator->hasNext())
     {

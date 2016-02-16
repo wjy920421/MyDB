@@ -10,7 +10,6 @@ using namespace std;
 class MyDB_AttVal;
 typedef shared_ptr <MyDB_AttVal> MyDB_AttValPtr;
 
-// this encapsulates actual data that is stored in the My_DB database system
 class MyDB_AttVal {
 
 public:
@@ -30,7 +29,6 @@ public:
 class MyDB_IntAttVal;
 typedef shared_ptr <MyDB_IntAttVal> MyDB_IntAttValPtr;
 
-// an integer attribute
 class MyDB_IntAttVal : public MyDB_AttVal {
 
 public:
@@ -55,7 +53,6 @@ private:
 class MyDB_DoubleAttVal;
 typedef shared_ptr <MyDB_DoubleAttVal> MyDB_DoubleAttValPtr;
 
-// a double attributes
 class MyDB_DoubleAttVal : public MyDB_AttVal {
 
 public:
@@ -80,7 +77,6 @@ private:
 class MyDB_StringAttVal;
 typedef shared_ptr <MyDB_StringAttVal> MyDB_StringAttValPtr;
 
-// a string attribute
 class MyDB_StringAttVal : public MyDB_AttVal {
 
 public:
@@ -105,7 +101,6 @@ private:
 class MyDB_BoolAttVal;
 typedef shared_ptr <MyDB_BoolAttVal> MyDB_BoolAttValPtr;
 
-// a boolean attributes
 class MyDB_BoolAttVal : public MyDB_AttVal {
 
 public:
@@ -126,5 +121,7 @@ private:
 
 	bool value;
 };
+
+
 
 #endif

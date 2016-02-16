@@ -54,7 +54,8 @@ void appendRecord (MyDB_PageReaderWriter &curPage, vector <MyDB_PageReaderWriter
 
 		// if we cannot, then add a new one to the output vector
 		returnVal.push_back (curPage);
-		MyDB_PageReaderWriter temp (*parent);
+		MyDB_PageHandle pageHandle = parent->getPage();
+		MyDB_PageReaderWriter temp (pageHandle, true);
 		temp.append (appendMe);
 		curPage = temp;
 	}
@@ -64,7 +65,8 @@ vector <MyDB_PageReaderWriter> mergeIntoList (MyDB_BufferManagerPtr parent, MyDB
 	MyDB_RecordIteratorAltPtr rightIter, function <bool ()> comparator, MyDB_RecordPtr lhs, MyDB_RecordPtr rhs) {
 	
 	vector <MyDB_PageReaderWriter> returnVal;
-	MyDB_PageReaderWriter curPage (*parent);
+	MyDB_PageHandle pageHandle = parent->getPage();
+	MyDB_PageReaderWriter curPage (pageHandle, true);
 	bool lhsLoaded = false, rhsLoaded = false;
 
 	// if one of the runs is empty, get outta here

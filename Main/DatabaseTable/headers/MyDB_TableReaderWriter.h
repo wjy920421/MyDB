@@ -8,6 +8,7 @@
 #include "MyDB_Table.h"
 #include "MyDB_Record.h"
 #include "MyDB_RecordIterator.h"
+#include "MyDB_RecordIteratorAlt.h"
 
 
 // create a smart pointer for the catalog
@@ -37,6 +38,15 @@ public:
     // by iterateIntoMe
     MyDB_RecordIteratorPtr getIterator (MyDB_RecordPtr iterateIntoMe);
 
+    // gets an instance of an alternate iterator over the table... this is an
+    // iterator that has the alternate getCurrent ()/advance () interface
+    MyDB_RecordIteratorAltPtr getIteratorAlt ();
+
+    // gets an instance of an alternate iterator over the page; this iterator
+    // works on a range of pages in the file, and iterates from lowPage through
+    // highPage inclusive
+    MyDB_RecordIteratorAltPtr getIteratorAlt (int lowPage, int highPage);
+
     // load a text file into this table... overwrites the current contents
     void loadFromTextFile (string fromMe);
 
@@ -49,10 +59,16 @@ public:
     // access the last page in the file
     MyDB_PageReaderWriter &last ();
 
+    // get the number of pages in the file
+    int getNumPages ();
+
+    // get access to the buffer manager 
+    MyDB_BufferManagerPtr getBufferMgr ();
+
 private:
     
-    // Friends with MyDB_TableRecordIterator
-    friend class MyDB_TableRecordIterator;
+    // Friends with MyDB_TableRecIterator
+    friend class MyDB_TableRecIterator;
     
     // Buffer manager that manages pages in a buffer pool
     MyDB_BufferManagerPtr bufferManagerPtr;
