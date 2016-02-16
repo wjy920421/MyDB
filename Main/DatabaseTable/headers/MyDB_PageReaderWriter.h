@@ -9,6 +9,7 @@
 #include "MyDB_RecordIterator.h"
 #include "MyDB_RecordIteratorAlt.h"
 #include "MyDB_PageHeader.h"
+#include "MyDB_BufferManager.h"
 
 
 class MyDB_PageReaderWriter;
@@ -49,7 +50,7 @@ public:
     void setType (MyDB_PageType toMe);
     
     // Constructor
-    MyDB_PageReaderWriter(MyDB_PageHandle pageHandle, bool clear = false);
+    MyDB_PageReaderWriter(MyDB_BufferManagerPtr bufferManagerPtr, MyDB_PageHandle pageHandle, bool clear = false);
     
     // Destructor
     ~MyDB_PageReaderWriter() {}
@@ -71,6 +72,8 @@ private:
     // Header of the page
     MyDB_PageHeaderPtr pageHeader;
     
+    // Buffer manager
+    MyDB_BufferManagerPtr bufferManagerPtr;
 };
 
 #endif

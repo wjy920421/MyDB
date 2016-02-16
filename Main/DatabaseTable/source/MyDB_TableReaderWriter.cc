@@ -23,13 +23,13 @@ MyDB_TableReaderWriter::MyDB_TableReaderWriter (MyDB_TablePtr tablePtr, MyDB_Buf
         for (int i = 0; i <= this->tablePtr->lastPage(); i++)
         {
             MyDB_PageHandle pageHandle = this->bufferManagerPtr->getPage(this->tablePtr, i);
-            this->pageVector.push_back(MyDB_PageReaderWriter(pageHandle));
+            this->pageVector.push_back(MyDB_PageReaderWriter(myBuffer, pageHandle));
         }
     }
     else
     {
         MyDB_PageHandle pageHandle = this->bufferManagerPtr->getPage(this->tablePtr, 0);
-        this->pageVector.push_back(MyDB_PageReaderWriter(pageHandle, true));
+        this->pageVector.push_back(MyDB_PageReaderWriter(this->bufferManagerPtr, pageHandle, true));
         this->tablePtr->setLastPage(0);
     }
 }
@@ -37,6 +37,15 @@ MyDB_TableReaderWriter::MyDB_TableReaderWriter (MyDB_TablePtr tablePtr, MyDB_Buf
 
 MyDB_PageReaderWriter & MyDB_TableReaderWriter::operator [] (size_t i)
 {
+    while (i > this->tablePtr->lastPage ())
+    {
+        this->tablePtr->setLastPage (this->tablePtr->lastPage() + 1);
+        MyDB_PageHandle newPage = this->bufferManagerPtr->getPage(this->tablePtr, this->tablePtr->lastPage());
+        MyDB_PageReaderWriter newPageRW(this->bufferManagerPtr, newPage, true);
+        newPageRW.clear();
+        this->pageVector.push_back(newPageRW);
+    }
+
     return this->pageVector[i];
 }
 
@@ -59,7 +68,7 @@ void MyDB_TableReaderWriter::append (MyDB_RecordPtr recordPtr)
     {
         MyDB_PageHandle pageHandle = this->bufferManagerPtr->getPage(this->tablePtr, this->tablePtr->lastPage() + 1);
         this->tablePtr->setLastPage(this->tablePtr->lastPage() + 1);
-        MyDB_PageReaderWriter newPageReaderWriter(pageHandle, true);
+        MyDB_PageReaderWriter newPageReaderWriter(this->bufferManagerPtr, pageHandle, true);
         newPageReaderWriter.append(recordPtr);
         this->pageVector.push_back(newPageReaderWriter);
     }
@@ -70,7 +79,7 @@ void MyDB_TableReaderWriter::loadFromTextFile (string filename)
 {
     this->pageVector.clear();
     MyDB_PageHandle pageHandle = this->bufferManagerPtr->getPage(this->tablePtr, 0);
-    this->pageVector.push_back(MyDB_PageReaderWriter(pageHandle, true));
+    this->pageVector.push_back(MyDB_PageReaderWriter(this->bufferManagerPtr, pageHandle, true));
 
     ifstream file(filename);
     if (file.is_open())

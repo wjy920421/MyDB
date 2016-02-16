@@ -57,7 +57,7 @@ void appendRecord (MyDB_PageReaderWriter &curPage, vector <MyDB_PageReaderWriter
         // if we cannot, then add a new one to the output vector
         returnVal.push_back (curPage);
         MyDB_PageHandle pageHandle = parent->getPage();
-        MyDB_PageReaderWriter temp (pageHandle, true);
+        MyDB_PageReaderWriter temp (parent, pageHandle, true);
         temp.append (appendMe);
         curPage = temp;
     }
@@ -69,7 +69,7 @@ vector <MyDB_PageReaderWriter> mergeIntoList (MyDB_BufferManagerPtr parent, MyDB
     
     vector <MyDB_PageReaderWriter> returnVal;
     MyDB_PageHandle pageHandle = parent->getPage();
-    MyDB_PageReaderWriter curPage (pageHandle, true);
+    MyDB_PageReaderWriter curPage (parent, pageHandle, true);
     bool lhsLoaded = false, rhsLoaded = false;
 
     // if one of the runs is empty, get outta here
@@ -136,35 +136,55 @@ vector <MyDB_PageReaderWriter> mergeIntoList (MyDB_BufferManagerPtr parent, MyDB
     // outta here!
     return returnVal;
 }
-    
-void sort (int numPages, MyDB_TableReaderWriter & tableIn, MyDB_TableReaderWriter & tableOut, 
+
+vector <MyDB_PageReaderWriter> mergePages (MyDB_BufferManagerPtr bufferMgr, vector <MyDB_PageReaderWriter> & pages, int lowPage, int highPage,
     function <bool ()> comparator, MyDB_RecordPtr lhs, MyDB_RecordPtr rhs)
 {
-    int totalNumPage = tableIn->getNumPages(); //
-
-    for(int i = 0; i < totalNumPage; i++){
-        *tableIn[i].sort(); // 
+    //if (lowPage > highPage)
+    //{
+    //    return vector <MyDB_PageReaderWriter> ();
+    //}
+    if (lowPage == highPage)
+    {
+        vector <MyDB_PageReaderWriter> returnVal;
+        returnVal.push_back(pages[lowPage]);
+        return returnVal;
     }
+    else if (lowPage + 1 == highPage)
+    {
+        return mergeIntoList(bufferMgr, pages[lowPage].getIteratorAlt(), pages[highPage].getIteratorAlt(), comparator, lhs, rhs);
+    }
+    else
+    {
+        int midPage = (lowPage + highPage) / 2;
+        //cout << lowPage << " " << midPage << " " << highPage << endl;
+        vector <MyDB_PageReaderWriter> lowSorted = mergePages(bufferMgr, pages, lowPage, midPage, comparator, lhs, rhs);
+        vector <MyDB_PageReaderWriter> highSorted = mergePages(bufferMgr, pages, midPage + 1, highPage, comparator, lhs, rhs);
+        return mergeIntoList(bufferMgr, getIteratorAlt(lowSorted), getIteratorAlt(highSorted), comparator, lhs, rhs);
+    }
+}
+    
+void sort (int runSize, MyDB_TableReaderWriter & tableIn, MyDB_TableReaderWriter & tableOut, 
+    function <bool ()> comparator, MyDB_RecordPtr lhs, MyDB_RecordPtr rhs)
+{
+    int numPages = tableIn.getNumPages();
+    int pagesAccessed = 0;
+    vector <MyDB_RecordIteratorAltPtr> bufferIters;
 
-    //determent number of chunks
-    int chunks = totalNumPage/(numPages - 1);
-    vector <MyDB_RecordIteratorAltPtr> mergeUs = new vector <MyDB_RecordIteratorAltPtr>();
-    MyDB_BufferManagerPtr BMPtr = new MyDB_BufferManager(); //
+    while (pagesAccessed < numPages)
+    {
+        vector <MyDB_PageReaderWriter> pages;
+        for (int i = 0; i < runSize; i++)
+        {
+            if (pagesAccessed < numPages) pages.push_back(*(tableIn[pagesAccessed++].sort(comparator, lhs, rhs)));
+            else break;
+        }
 
-    for(int i = 0; i < chunks; i++){
-        MyDB_RecordIteratorAltPtr leftIter = *tableIn[i].getIteratorAlt();
-        int rightIterPos = (i + i + numPages - 1)/2;
-        MyDB_RecordIteratorAltPtr rightIter = *tableIn[i + numPages - 1].getIteratorAlt(); // could you add the get last altptr
-        // in myPageReaderWriter?
-
-        vector <MyDB_PageReaderWriter> chunckPages = mergeIntoList (BMPtr, leftIter, rightIter, comparator, lhs, rhs);
-
-        mergeUs.append(rightIter.advance());
+        vector <MyDB_PageReaderWriter> sortedBuffer = mergePages(tableIn.getBufferMgr(), pages, 0, pages.size() - 1, comparator, lhs, rhs);
+        bufferIters.push_back(getIteratorAlt(sortedBuffer));
     }
     
-
-    mergeIntoFile (&tableOut, &mergeUs, comparator, lhs, rhs);
-
+    mergeIntoFile (tableOut, bufferIters, comparator, lhs, rhs);
 }
 
 #endif

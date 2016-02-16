@@ -25,6 +25,20 @@
 /* End PBXGroup section */
 
 /* Begin PBXLegacyTarget section */
+		579609C91C73137A001C5CC1 /* SortTest */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = 579609CC1C73137A001C5CC1 /* Build configuration list for PBXLegacyTarget "SortTest" */;
+			buildPhases = (
+			);
+			buildToolPath = "$(PROJECT_DIR)/XcodeBuild/build_tool.sh";
+			buildWorkingDirectory = "$(PROJECT_DIR)/XcodeBuild/";
+			dependencies = (
+			);
+			name = SortTest;
+			passBuildSettingsInEnvironment = 1;
+			productName = SortTest;
+		};
 		57B2DC091C6D32F0005D7B02 /* BufferTest */ = {
 			isa = PBXLegacyTarget;
 			buildArgumentsString = "$(ACTION)";
@@ -62,6 +76,9 @@
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = wjy;
 				TargetAttributes = {
+					579609C91C73137A001C5CC1 = {
+						CreatedOnToolsVersion = 7.2.1;
+					};
 					57B2DC091C6D32F0005D7B02 = {
 						CreatedOnToolsVersion = 7.2.1;
 					};
@@ -83,11 +100,35 @@
 			targets = (
 				57B2DC091C6D32F0005D7B02 /* BufferTest */,
 				57B2DC121C6E4F03005D7B02 /* RecordTest */,
+				579609C91C73137A001C5CC1 /* SortTest */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin XCBuildConfiguration section */
+		579609CA1C73137A001C5CC1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUGGING_SYMBOLS = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		579609CB1C73137A001C5CC1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		57B2DC0A1C6D32F0005D7B02 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -210,6 +251,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		579609CC1C73137A001C5CC1 /* Build configuration list for PBXLegacyTarget "SortTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				579609CA1C73137A001C5CC1 /* Debug */,
+				579609CB1C73137A001C5CC1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		57B2DC081C6D32F0005D7B02 /* Build configuration list for PBXProject "MyDB" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -226,6 +275,7 @@
 				57B2DC0E1C6D32F0005D7B02 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		57B2DC131C6E4F03005D7B02 /* Build configuration list for PBXLegacyTarget "RecordTest" */ = {
 			isa = XCConfigurationList;
@@ -234,6 +284,7 @@
 				57B2DC151C6E4F03005D7B02 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

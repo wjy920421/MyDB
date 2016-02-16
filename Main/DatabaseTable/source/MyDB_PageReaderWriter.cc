@@ -15,8 +15,9 @@ MyDB_RecordIteratorAltPtr getIteratorAlt (vector <MyDB_PageReaderWriter> &forUs)
 }
 
 
-MyDB_PageReaderWriter::MyDB_PageReaderWriter(MyDB_PageHandle pageHandle, bool clear)
+MyDB_PageReaderWriter::MyDB_PageReaderWriter(MyDB_BufferManagerPtr bufferManagerPtr, MyDB_PageHandle pageHandle, bool clear)
 {
+    this->bufferManagerPtr = bufferManagerPtr;
     this->pageHandle = pageHandle;
     this->pageHeader = make_shared <MyDB_PageHeader> (this->pageHandle);
     this->setType(MyDB_PageType::RegularPage);
@@ -94,7 +95,8 @@ MyDB_PageReaderWriterPtr MyDB_PageReaderWriter::sort (function <bool()> comparat
     std::sort(positions.begin(), positions.end(), myComparator);
 
     // and now create the page to return
-    MyDB_PageReaderWriterPtr returnVal = make_shared <MyDB_PageReaderWriter> (this->pageHandle);
+    MyDB_PageHandle anonymousPage = this->bufferManagerPtr->getPage();
+    MyDB_PageReaderWriterPtr returnVal = make_shared <MyDB_PageReaderWriter> (this->bufferManagerPtr, anonymousPage);
     returnVal->clear();
     
     // loop through all of the sorted records and write them out
