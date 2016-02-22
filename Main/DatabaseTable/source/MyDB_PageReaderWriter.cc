@@ -2,6 +2,7 @@
 #ifndef PAGE_RW_C
 #define PAGE_RW_C
 
+#include <algorithm>
 #include "MyDB_PageReaderWriter.h"
 #include "MyDB_PageRecIterator.h"
 #include "MyDB_PageRecIteratorAlt.h"
